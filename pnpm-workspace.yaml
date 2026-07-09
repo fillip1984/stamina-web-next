@@ -1,7 +1,6 @@
 packages: []
 
 allowBuilds:
+  esbuild: true
   sharp: true
   unrs-resolver: true
-  msw: false
-  esbuild: set this to true or false
