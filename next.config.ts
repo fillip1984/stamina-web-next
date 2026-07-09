@@ -6,6 +6,17 @@ import type { NextConfig } from "next"
  */
 import "./src/env.js"
 
-const nextConfig: NextConfig = {}
+const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        port: "",
+        pathname: "/**",
+      },
+    ],
+  },
+}
 
 export default nextConfig

@@ -2,9 +2,11 @@ import { Geist, Geist_Mono, Noto_Sans } from "next/font/google"
 
 import { AppSidebar } from "@/components/nav/app-sidebar"
 import AppTopbar from "@/components/nav/app-topbar"
+import SignInView from "@/components/sign-in"
 import { ThemeProvider } from "@/components/theme/theme-provider"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
+import { getSession } from "@/server/better-auth/server"
 import "./globals.css"
 
 const notoSansHeading = Noto_Sans({
@@ -19,11 +21,13 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const session = await getSession()
+
   return (
     <html
       lang="en"
@@ -38,21 +42,27 @@ export default function RootLayout({
     >
       <body>
         <ThemeProvider>
-          <SidebarProvider
-            style={
-              {
-                "--sidebar-width": "19rem",
-              } as React.CSSProperties
-            }
-          >
-            <AppSidebar />
-            <SidebarInset className="h-screen overflow-hidden">
-              <AppTopbar />
-              <div className="flex grow overflow-hidden">{children}</div>
-            </SidebarInset>
-          </SidebarProvider>
+          {session?.user ? <SignedIn>{children}</SignedIn> : <SignInView />}
         </ThemeProvider>
       </body>
     </html>
+  )
+}
+
+const SignedIn = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+  return (
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "19rem",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar />
+      <SidebarInset className="h-screen overflow-hidden">
+        <AppTopbar />
+        <div className="flex grow overflow-hidden">{children}</div>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
