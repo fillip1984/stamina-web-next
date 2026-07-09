@@ -1,6 +1,9 @@
 import { Geist, Geist_Mono, Noto_Sans } from "next/font/google"
 
-import { ThemeProvider } from "@/components/theme-provider"
+import { AppSidebar } from "@/components/nav/app-sidebar"
+import AppTopbar from "@/components/nav/app-topbar"
+import { ThemeProvider } from "@/components/theme/theme-provider"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 import "./globals.css"
 
@@ -34,7 +37,21 @@ export default function RootLayout({
       )}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <SidebarProvider
+            style={
+              {
+                "--sidebar-width": "19rem",
+              } as React.CSSProperties
+            }
+          >
+            <AppSidebar />
+            <SidebarInset className="h-screen overflow-hidden">
+              <AppTopbar />
+              <div className="flex grow overflow-hidden">{children}</div>
+            </SidebarInset>
+          </SidebarProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
