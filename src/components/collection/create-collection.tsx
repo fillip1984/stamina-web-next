@@ -19,6 +19,8 @@ import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 
 export default function CreateCollection() {
+  const [isOpen, setIsOpen] = useState(false)
+
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
 
@@ -45,13 +47,14 @@ export default function CreateCollection() {
       })
       setName("")
       setDescription("")
+      setIsOpen(false)
     } catch (error) {
       console.error("Error creating collection:", error)
     }
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
       <form>
         <DialogTrigger
           render={
@@ -87,7 +90,9 @@ export default function CreateCollection() {
           </FieldGroup>
           <DialogFooter>
             <DialogClose render={<Button variant="outline">Cancel</Button>} />
-            <Button onClick={handleCreateCollection}>Save changes</Button>
+            <Button onClick={handleCreateCollection} disabled={!name}>
+              Save changes
+            </Button>
           </DialogFooter>
         </DialogContent>
       </form>
