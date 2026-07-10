@@ -64,7 +64,7 @@ export default function Page() {
   return (
     <div className="flex grow overflow-x-auto p-4">
       <div className="container mx-auto flex w-full lg:w-1/2">
-        <div className="mt-4 flex w-full gap-4">
+        <div className="mt-4 flex w-full flex-wrap gap-4">
           {collections.map((collection) => (
             <CollectionCard key={collection.id} collection={collection} />
           ))}

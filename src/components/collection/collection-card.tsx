@@ -6,7 +6,7 @@ export default function CollectionCard({
   collection: CollectionSummaryType
 }) {
   return (
-    <div className="flex h-40 w-80 flex-col items-center justify-center rounded-xl border p-4">
+    <div className="flex h-40 w-80 shrink-0 flex-col items-center justify-center rounded-xl border p-4">
       {collection.name}
     </div>
   )
