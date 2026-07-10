@@ -5,21 +5,18 @@ import {
   ArrowBigLeft,
   CogIcon,
   EllipsisIcon,
-  FilmIcon,
   ListChecksIcon,
   TrashIcon,
   TvIcon,
 } from "lucide-react"
 import { AnimatePresence, motion } from "motion/react"
 import Link from "next/link"
-import { notFound } from "next/navigation"
+import { notFound, useRouter } from "next/navigation"
 import { use, useEffect, useState } from "react"
 
 import CreateTask from "@/components/collection/task/create-task"
-import MediaCard from "@/components/collection/task/media-card"
 import TaskCard from "@/components/collection/task/task-card"
 import LoadingAndRetry from "@/components/shared/loading-and-retry"
-import ProgressBadge from "@/components/shared/progress-badge"
 import Container from "@/components/styled-components/container"
 import InlineEditableInput from "@/components/styled-components/inline-editable-input"
 import { Badge } from "@/components/ui/badge"
@@ -39,7 +36,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { calculateProgress } from "@/lib/progress-utils"
 import { useTRPC } from "@/trpc/react"
 
 export default function CollectionDetails({
@@ -82,6 +78,20 @@ export default function CollectionDetails({
     if (name !== collection.name || description !== collection.description) {
       updateCollection.mutate({ ...collection, name, description })
     }
+  }
+
+  const router = useRouter()
+  const deleteCollection = useMutation(
+    trpc.collection.delete.mutationOptions({
+      onSuccess: async () => {
+        void queryClient.invalidateQueries(trpc.collection.pathFilter())
+        router.replace("/collections")
+      },
+    })
+  )
+  const handleDeleteCollection = () => {
+    if (!collection) return
+    deleteCollection.mutate({ id: collection.id })
   }
 
   const collectionTypeOptions = [
@@ -127,7 +137,7 @@ export default function CollectionDetails({
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
                   <CogIcon />
-                  Collection Settings
+                  Settings
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
@@ -160,7 +170,10 @@ export default function CollectionDetails({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem variant="destructive">
+              <DropdownMenuItem
+                variant="destructive"
+                onClick={handleDeleteCollection}
+              >
                 <TrashIcon />
                 Delete
               </DropdownMenuItem>
@@ -171,20 +184,20 @@ export default function CollectionDetails({
 
       <div className="rounded-xl p-4">
         <div className="flex items-center gap-2">
-          <ProgressBadge
+          {/* <ProgressBadge
             progress={calculateProgress({
               completed: collection.tasks.filter((t) => t.complete).length,
               total: collection.tasks.length,
             })}
             icon={<FilmIcon />}
-          />
-          <h5 className="w-full">
+          /> */}
+          <h3 className="w-full">
             <InlineEditableInput
               value={name}
               onChange={setName}
               onBlur={handleCollectionUpdate}
             />
-          </h5>
+          </h3>
         </div>
 
         <div className="text-muted-foreground">
@@ -215,11 +228,11 @@ export default function CollectionDetails({
                 delayChildren: 0.2,
               }}
             >
-              {collectionType === "TMDB" ? (
-                <MediaCard task={task} />
-              ) : (
-                <TaskCard task={task} />
-              )}
+              {/* {collectionType === "TMDB" ? ( */}
+              {/* <MediaCard task={task} /> */}
+              {/* ) : ( */}
+              <TaskCard task={task} />
+              {/* )} */}
             </motion.div>
           ))}
         </AnimatePresence>
