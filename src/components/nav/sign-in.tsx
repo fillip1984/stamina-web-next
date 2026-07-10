@@ -1,12 +1,12 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
 import { authClient } from "@/server/better-auth/client"
 import { useState } from "react"
-import { Button } from "./ui/button"
-import { Spinner } from "./ui/spinner"
 
+import googleIcon from "@/../public/icons/google-icon.svg"
 import Image from "next/image"
-import googleIcon from "../../public/icons/google-icon.svg"
 
 export default function SignInView() {
   const socialProviders = [{ label: "google", icon: googleIcon }]

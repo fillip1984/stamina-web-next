@@ -11,8 +11,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar"
@@ -50,18 +48,8 @@ import {
 const data = {
   navMain: [
     {
-      title: "Getting Started",
-      url: "#",
-      items: [
-        {
-          title: "Installation",
-          url: "#",
-        },
-        {
-          title: "Project Structure",
-          url: "#",
-        },
-      ],
+      title: "Collections",
+      url: "/collections",
     },
   ],
 }
@@ -107,15 +95,6 @@ const PrimaryNav = () => {
               >
                 {item.title}
               </SidebarMenuButton>
-              {item.items?.length ? (
-                <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
-                  {item.items.map((item) => (
-                    <SidebarMenuSubItem key={item.title}>
-                      {item.title}
-                    </SidebarMenuSubItem>
-                  ))}
-                </SidebarMenuSub>
-              ) : null}
             </SidebarMenuItem>
           ))}
         </SidebarMenu>

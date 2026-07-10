@@ -55,9 +55,9 @@ export default function CreateCollection() {
       <form>
         <DialogTrigger
           render={
-            <Button className="flex h-40 w-80 flex-col items-center justify-center rounded-xl border p-4">
-              New Collection
-              <PlusIcon />
+            <Button className="flex h-40 w-full min-w-80 shrink-0 flex-col items-center justify-center rounded-xl border p-4">
+              <h4>New Collection</h4>
+              <PlusIcon className="size-10" />
             </Button>
           }
         />

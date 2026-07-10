@@ -67,28 +67,23 @@ export default function CollectionListPage() {
   // default view
   return (
     <Container scrollToTopButton={true}>
-      <div className="rounded-xl p-2">
-        <div className="flex flex-col gap-2">
-          <AnimatePresence>
-            {collections?.map((collection) => (
-              <motion.div
-                key={collection.id}
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{
-                  delayChildren: 0.2,
-                }}
-              >
-                <CollectionCard collection={collection} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
-      </div>
-
-      <div className="rounded-xl p-4">
-        <CreateCollection />
+      <div className="flex flex-col gap-2">
+        <AnimatePresence>
+          {collections?.map((collection) => (
+            <motion.div
+              key={collection.id}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{
+                delayChildren: 0.2,
+              }}
+            >
+              <CollectionCard collection={collection} />
+            </motion.div>
+          ))}
+          <CreateCollection />
+        </AnimatePresence>
       </div>
     </Container>
   )

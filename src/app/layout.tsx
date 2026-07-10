@@ -2,7 +2,7 @@ import { Geist, Geist_Mono, Noto_Sans } from "next/font/google"
 
 import { AppSidebar } from "@/components/nav/app-sidebar"
 import AppTopbar from "@/components/nav/app-topbar"
-import SignInView from "@/components/sign-in"
+import SignInView from "@/components/nav/sign-in"
 import { ThemeProvider } from "@/components/theme/theme-provider"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"

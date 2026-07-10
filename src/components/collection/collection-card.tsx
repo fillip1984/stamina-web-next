@@ -9,9 +9,10 @@ export default function CollectionCard({
   return (
     <Link
       href={`/collections/${collection.id}`}
-      className="flex h-40 w-80 shrink-0 flex-col items-center justify-center rounded-xl border p-4"
+      className="flex h-40 min-w-80 shrink-0 flex-col rounded-xl border p-4 hover:border-primary hover:text-primary"
     >
-      {collection.name}
+      <h4>{collection.name}</h4>
+      <p className="text-sm text-muted-foreground">{collection.description}</p>
     </Link>
   )
 }
