@@ -11,7 +11,7 @@ export const taskRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1),
         description: z.string().optional(),
-        listId: z.string(),
+        collectionId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {

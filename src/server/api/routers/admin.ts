@@ -1,29 +1,29 @@
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc"
 
 export const adminRouter = createTRPCRouter({
   exportData: protectedProcedure.mutation(async ({ ctx }) => {
-    const lists = await ctx.db.query.list.findMany({
+    const collections = await ctx.db.query.collection.findMany({
       where: {
         userId: ctx.session.user.id,
       },
-    });
-    // const lists = await ctx.db._query.list.findMany({
-    //   where: eq(list.userId, ctx.session.user.id),
+    })
+    // const collections = await ctx.db._query.collection.findMany({
+    //   where: eq(collection.userId, ctx.session.user.id),
     // });
 
     const tasks = await ctx.db.query.task.findMany({
       where: {
         userId: ctx.session.user.id,
       },
-    });
+    })
     // const tasks = await ctx.db._query.task.findMany({
     //   where: eq(task.userId, ctx.session.user.id),
     // });
 
     return {
-      lists,
+      collections,
       tasks,
-    };
+    }
   }),
   // importData: protectedProcedure
   //   .input(
@@ -90,4 +90,4 @@ export const adminRouter = createTRPCRouter({
   //       });
   //     }
   //   }),
-});
+})

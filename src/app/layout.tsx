@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme/theme-provider"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 import { getSession } from "@/server/better-auth/server"
+import { TRPCReactProvider } from "@/trpc/react"
 import "./globals.css"
 
 const notoSansHeading = Noto_Sans({
@@ -41,9 +42,11 @@ export default async function RootLayout({
       )}
     >
       <body>
-        <ThemeProvider>
-          {session?.user ? <SignedIn>{children}</SignedIn> : <SignInView />}
-        </ThemeProvider>
+        <TRPCReactProvider>
+          <ThemeProvider>
+            {session?.user ? <SignedIn>{children}</SignedIn> : <SignInView />}
+          </ThemeProvider>
+        </TRPCReactProvider>
       </body>
     </html>
   )

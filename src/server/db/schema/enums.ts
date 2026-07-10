@@ -1,3 +1,6 @@
-import { baseSchema } from "./base";
+import { baseSchema } from "./base"
 
-export const ListTypeEnum = baseSchema.enum("list_type", ["GENERAL", "TMDB"]);
+export const CollectionTypeEnum = baseSchema.enum("collection_type", [
+  "GENERAL",
+  "TMDB",
+])
