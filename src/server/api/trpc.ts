@@ -7,9 +7,9 @@
  * The pieces you will need to use are documented accordingly near the end
  */
 import { initTRPC, TRPCError } from "@trpc/server"
-import type { Auth } from "better-auth"
 import superjson from "superjson"
 import { z, ZodError } from "zod/v4"
+import type { auth as appAuth } from "@/server/better-auth/server"
 import { db } from "../db"
 
 /**
@@ -27,7 +27,7 @@ import { db } from "../db"
 
 export const createTRPCContext = async (opts: {
   headers: Headers
-  auth: Auth
+  auth: typeof appAuth
 }) => {
   const authApi = opts.auth.api
   const session = await authApi.getSession({
