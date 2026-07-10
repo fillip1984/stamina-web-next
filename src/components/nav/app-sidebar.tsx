@@ -208,7 +208,9 @@ const Footer = () => {
                 onClick={() =>
                   authClient.signOut({
                     fetchOptions: {
-                      onSuccess: () => router.push("/"),
+                      onSuccess: () => {
+                        router.push("/login")
+                      },
                     },
                   })
                 }

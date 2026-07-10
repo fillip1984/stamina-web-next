@@ -19,7 +19,7 @@ import CreateTask from "@/components/collection/task/create-task"
 import MediaCard from "@/components/collection/task/media-card"
 import TaskCard from "@/components/collection/task/task-card"
 import LoadingAndRetry from "@/components/shared/loading-and-retry"
-import ProgressBadge from "@/components/shared/progressBadge"
+import ProgressBadge from "@/components/shared/progress-badge"
 import Container from "@/components/styled-components/container"
 import InlineEditableInput from "@/components/styled-components/inline-editable-input"
 import { Badge } from "@/components/ui/badge"
@@ -169,7 +169,7 @@ export default function CollectionDetails({
         </DropdownMenu>
       </div>
 
-      <div className="rounded-xl bg-gray-800 p-4">
+      <div className="rounded-xl p-4">
         <div className="flex items-center gap-2">
           <ProgressBadge
             progress={calculateProgress({
@@ -196,7 +196,7 @@ export default function CollectionDetails({
         </div>
       </div>
 
-      <div className="rounded-xl bg-gray-800 p-4">
+      <div className="rounded-xl p-4">
         <div className="mb-2 flex items-center justify-between">
           <h5>Tasks</h5>
           <Badge variant="secondary">
@@ -225,7 +225,7 @@ export default function CollectionDetails({
         </AnimatePresence>
       </div>
 
-      <div className="rounded-xl bg-gray-800 p-4">
+      <div className="rounded-xl p-4">
         <CreateTask collectionId={collection.id} />
       </div>
     </Container>

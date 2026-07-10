@@ -67,7 +67,7 @@ export default function CollectionListPage() {
   // default view
   return (
     <Container scrollToTopButton={true}>
-      <div className="rounded-xl bg-gray-800 p-2">
+      <div className="rounded-xl p-2">
         <div className="flex flex-col gap-2">
           <AnimatePresence>
             {collections?.map((collection) => (
@@ -87,7 +87,7 @@ export default function CollectionListPage() {
         </div>
       </div>
 
-      <div className="rounded-xl bg-gray-800 p-4">
+      <div className="rounded-xl p-4">
         <CreateCollection />
       </div>
     </Container>
