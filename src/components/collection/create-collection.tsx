@@ -32,12 +32,22 @@ export default function CreateCollection() {
     })
   )
   const handleCreateCollection = () => {
-    createCollection.mutate({
-      name,
-      description,
-    })
-    setName("")
-    setDescription("")
+    try {
+      console.log(
+        "Creating collection with name:",
+        name,
+        "and description:",
+        description
+      )
+      createCollection.mutate({
+        name,
+        description,
+      })
+      setName("")
+      setDescription("")
+    } catch (error) {
+      console.error("Error creating collection:", error)
+    }
   }
 
   return (
@@ -45,10 +55,10 @@ export default function CreateCollection() {
       <form>
         <DialogTrigger
           render={
-            <div className="flex h-40 w-80 flex-col items-center justify-center rounded-xl border p-4">
+            <Button className="flex h-40 w-80 flex-col items-center justify-center rounded-xl border p-4">
               New Collection
               <PlusIcon />
-            </div>
+            </Button>
           }
         />
         <DialogContent className="sm:max-w-sm">

@@ -7,9 +7,9 @@ import { createTRPCContext } from "@trpc/tanstack-react-query"
 import { useState } from "react"
 import SuperJSON from "superjson"
 
+import type { AppRouter } from "@/server/api"
+
 import { env } from "@/env"
-import type { AppRouter } from "@/server/api/root"
-import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server"
 import { createQueryClient } from "./query-client"
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined
@@ -58,23 +58,9 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
   )
 }
 
-/**
- * Inference helpers for input types
- * @example
- * type PostByIdInput = RouterInputs['post']['byId']
- *      ^? { id: number }
- */
-export type RouterInputs = inferRouterInputs<AppRouter>
-
-/**
- * Inference helpers for output types
- * @example
- * type AllPostsOutput = RouterOutputs['post']['all']
- *      ^? Post[]
- */
-export type RouterOutputs = inferRouterOutputs<AppRouter>
-
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return window.location.origin
-  return env.PRODUCTION_URL
+  if (env.NODE_ENV === "production") return env.PRODUCTION_URL
+  // eslint-disable-next-line no-restricted-properties
+  return `http://localhost:${process.env.PORT ?? 3000}`
 }
