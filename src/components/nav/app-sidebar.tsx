@@ -173,9 +173,9 @@ const Footer = () => {
               sideOffset={4}
             >
               <DropdownMenuGroup>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/settings")}>
                   <SlidersHorizontalIcon />
-                  Admin
+                  Settings
                 </DropdownMenuItem>
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>
