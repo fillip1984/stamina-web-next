@@ -1,8 +1,13 @@
 "use client"
 
+import { useQuery } from "@tanstack/react-query"
+import { SearchX } from "lucide-react"
+import { AnimatePresence, motion } from "motion/react"
+
 import CollectionCard from "@/components/collection/collection-card"
 import CreateCollection from "@/components/collection/create-collection"
 import LoadingAndRetry from "@/components/shared/loading-and-retry"
+import Container from "@/components/styled-components/container"
 import { Button } from "@/components/ui/button"
 import {
   Empty,
@@ -14,10 +19,8 @@ import {
 } from "@/components/ui/empty"
 import { Separator } from "@/components/ui/separator"
 import { useTRPC } from "@/trpc/react"
-import { useQuery } from "@tanstack/react-query"
-import { SearchX } from "lucide-react"
 
-export default function Page() {
+export default function HomePage() {
   const trpc = useTRPC()
   const {
     data: collections,
@@ -37,7 +40,7 @@ export default function Page() {
   }
 
   // empty view
-  if (collections === undefined || collections.length === 0) {
+  if (collections?.length === 0) {
     return (
       <Empty>
         <EmptyHeader>
@@ -61,16 +64,32 @@ export default function Page() {
     )
   }
 
+  // default view
   return (
-    <div className="flex grow overflow-x-auto p-4">
-      <div className="container mx-auto flex w-full lg:w-1/2">
-        <div className="mt-4 flex w-full flex-wrap gap-4">
-          {collections.map((collection) => (
-            <CollectionCard key={collection.id} collection={collection} />
-          ))}
-          <CreateCollection />
+    <Container scrollToTopButton={true}>
+      <div className="rounded-xl bg-gray-800 p-2">
+        <div className="flex flex-col gap-2">
+          <AnimatePresence>
+            {collections?.map((collection) => (
+              <motion.div
+                key={collection.id}
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{
+                  delayChildren: 0.2,
+                }}
+              >
+                <CollectionCard collection={collection} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
-    </div>
+
+      <div className="rounded-xl bg-gray-800 p-4">
+        <CreateCollection />
+      </div>
+    </Container>
   )
 }
