@@ -5,6 +5,7 @@ import { Trash } from "lucide-react"
 import { useState } from "react"
 
 import TextFieldEditInPlace from "@/components/styled-components/inline-editable-input"
+import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import type { TaskType } from "@/server/api/types"
 import { useTRPC } from "@/trpc/react"
@@ -84,7 +85,9 @@ export default function TaskCard({ task }: { task: TaskType }) {
           />
         </div>
       </div>
-      <Trash className="text-destructive" onClick={handleDeleteTask} />
+      <Button variant="destructive" size="icon" onClick={handleDeleteTask}>
+        <Trash />
+      </Button>
     </div>
   )
 }

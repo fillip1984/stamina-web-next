@@ -1,7 +1,7 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query"
-import { SearchX } from "lucide-react"
+import { BeerIcon } from "lucide-react"
 import { AnimatePresence, motion } from "motion/react"
 
 import CollectionCard from "@/components/collection/collection-card"
@@ -45,7 +45,7 @@ export default function CollectionListPage() {
       <Empty>
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <SearchX />
+            <BeerIcon />
           </EmptyMedia>
           <EmptyTitle>No Collections Yet</EmptyTitle>
           <EmptyDescription>
