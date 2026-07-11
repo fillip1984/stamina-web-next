@@ -1,0 +1,146 @@
+import { z } from "zod/v4"
+
+import { weightGoals } from "@/server/db/schema"
+import { and, eq } from "drizzle-orm"
+import { createTRPCRouter, protectedProcedure } from "../trpc"
+
+export const WeighInRouter = createTRPCRouter({
+  // create: protectedProcedure
+  //   .input(
+  //     z.object({
+  //       measurableId: z.string(),
+  //       date: z.date(),
+  //       weight: z.number(),
+  //       bodyFatPercentage: z.number().optional(),
+  //     }),
+  //   )
+  //   .mutation(async ({ ctx, input }) => {
+  //     const previousWeighIn = await ctx.db.weighIn.findFirst({
+  //       where: {
+  //         userId: ctx.session.user.id,
+  //       },
+  //       orderBy: {
+  //         date: "desc",
+  //       },
+  //     });
+  //     const txResult = await ctx.db.$transaction(async (db) => {
+  //       const result = await db.result.create({
+  //         data: {
+  //           userId: ctx.session.user.id,
+  //           measurableId: input.measurableId,
+  //           date: input.date,
+  //           notes: `Weigh-in recorded: ${input.weight} lbs${
+  //             input.bodyFatPercentage
+  //               ? `, Body Fat: ${input.bodyFatPercentage}%`
+  //               : ""
+  //           }`,
+  //         },
+  //       });
+  //       const weighIn = await db.weighIn.create({
+  //         data: {
+  //           userId: ctx.session.user.id,
+  //           date: input.date,
+  //           weight: input.weight,
+  //           bodyFatPercentage: input.bodyFatPercentage,
+  //           previousWeighInId: previousWeighIn ? previousWeighIn.id : null,
+  //           resultId: result.id,
+  //         },
+  //       });
+  //       return { weighIn, result };
+  //     });
+  //     return txResult;
+  //   }),
+  // readAll: protectedProcedure
+  //   .input(z.object({ filter: z.string() }))
+  //   .query(async ({ ctx, input }) => {
+  //     if (input.filter === "This week") {
+  //       console.warn("Probably going to have timezone issues with this");
+  //       const now = new Date();
+  //       const start = startOfWeek(now);
+  //       const end = endOfWeek(now);
+
+  //       const result = await ctx.db.weighIn.findMany({
+  //         where: {
+  //           userId: ctx.session.user.id,
+  //           date: {
+  //             gte: start,
+  //             lte: end,
+  //           },
+  //         },
+  //         orderBy: {
+  //           date: "asc",
+  //         },
+  //       });
+  //       return result;
+  //     }
+
+  //     if (input.filter === "Last 10") {
+  //       const result = await ctx.db.weighIn.findMany({
+  //         where: {
+  //           userId: ctx.session.user.id,
+  //         },
+  //         take: 10,
+  //         orderBy: {
+  //           date: "asc",
+  //         },
+  //       });
+  //       return result;
+  //     }
+
+  //     const result = await ctx.db.weighIn.findMany({
+  //       where: {
+  //         userId: ctx.session.user.id,
+  //       },
+  //       orderBy: {
+  //         date: "asc",
+  //       },
+  //     });
+  //     return result;
+  //   }),
+  readById: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.db.query.weighIns.findFirst({
+        where: {
+          id: input.id,
+          userId: ctx.session.user.id,
+        },
+      })
+    }),
+  getWeightGoal: protectedProcedure.query(({ ctx }) => {
+    return ctx.db.query.weightGoals.findFirst({
+      where: { userId: ctx.session.user.id },
+    })
+  }),
+  setWeightGoal: protectedProcedure
+    .input(
+      z.object({
+        weightGoal: z.number().nullable(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const currentGoal = await ctx.db.query.weightGoals.findFirst({
+        where: { userId: ctx.session.user.id },
+      })
+      if (currentGoal) {
+        const updatedGoal = await ctx.db
+          .update(weightGoals)
+          .set({
+            weight: input.weightGoal,
+          })
+          .where(
+            and(
+              eq(weightGoals.id, currentGoal.id),
+              eq(weightGoals.userId, ctx.session.user.id)
+            )
+          )
+        return updatedGoal
+      } else {
+        const newGoal = await ctx.db.insert(weightGoals).values({
+          userId: ctx.session.user.id,
+          weight: input.weightGoal,
+        })
+        return newGoal
+      }
+    }),
+})

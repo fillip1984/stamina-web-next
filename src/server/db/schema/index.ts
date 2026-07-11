@@ -1,3 +1,3 @@
+export * from "./app-schema"
 export * from "./auth"
-export * from "./collection"
 export * from "./enums"

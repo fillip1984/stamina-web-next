@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import { collection } from "@/server/db/schema"
+import { collections } from "@/server/db/schema"
 
 import { and, eq } from "drizzle-orm"
 import { createTRPCRouter, protectedProcedure } from "../trpc"
@@ -14,14 +14,14 @@ export const collectionRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.insert(collection).values({
+      return await ctx.db.insert(collections).values({
         ...input,
         userId: ctx.session.user.id,
       })
     }),
 
   readAll: protectedProcedure.query(async ({ ctx }) => {
-    const results = ctx.db.query.collection.findMany({
+    const results = ctx.db.query.collections.findMany({
       where: {
         userId: ctx.session.user.id,
       },
@@ -48,7 +48,7 @@ export const collectionRouter = createTRPCRouter({
     // check back once drizzle 1.0 drops
     const collectionsWithTaskCount = (await results).map(
       async (collectionItem) => {
-        const tasks = await ctx.db.query.task.findMany({
+        const tasks = await ctx.db.query.tasks.findMany({
           where: {
             collectionId: collectionItem.id,
           },
@@ -100,7 +100,7 @@ export const collectionRouter = createTRPCRouter({
       //     userId: false,
       //   },
       // });
-      const result = await ctx.db.query.collection.findFirst({
+      const result = await ctx.db.query.collections.findFirst({
         where: {
           id: input.id,
           userId: ctx.session.user.id,
@@ -135,10 +135,13 @@ export const collectionRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input
       return await ctx.db
-        .update(collection)
+        .update(collections)
         .set(data)
         .where(
-          and(eq(collection.id, id), eq(collection.userId, ctx.session.user.id))
+          and(
+            eq(collections.id, id),
+            eq(collections.userId, ctx.session.user.id)
+          )
         )
     }),
 
@@ -146,11 +149,11 @@ export const collectionRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return await ctx.db
-        .delete(collection)
+        .delete(collections)
         .where(
           and(
-            eq(collection.id, input.id),
-            eq(collection.userId, ctx.session.user.id)
+            eq(collections.id, input.id),
+            eq(collections.userId, ctx.session.user.id)
           )
         )
     }),

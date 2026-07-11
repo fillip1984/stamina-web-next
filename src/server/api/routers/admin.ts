@@ -2,7 +2,7 @@ import { createTRPCRouter, protectedProcedure } from "../trpc"
 
 export const adminRouter = createTRPCRouter({
   exportData: protectedProcedure.mutation(async ({ ctx }) => {
-    const collections = await ctx.db.query.collection.findMany({
+    const collections = await ctx.db.query.collections.findMany({
       where: {
         userId: ctx.session.user.id,
       },
@@ -11,7 +11,7 @@ export const adminRouter = createTRPCRouter({
     //   where: eq(collection.userId, ctx.session.user.id),
     // });
 
-    const tasks = await ctx.db.query.task.findMany({
+    const tasks = await ctx.db.query.tasks.findMany({
       where: {
         userId: ctx.session.user.id,
       },
