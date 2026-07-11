@@ -1,21 +1,6 @@
 "use client"
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import {
-  ArrowBigLeft,
-  CogIcon,
-  EllipsisIcon,
-  ListChecksIcon,
-  TrashIcon,
-  TvIcon,
-} from "lucide-react"
-import { AnimatePresence, motion } from "motion/react"
-import Link from "next/link"
-import { notFound, useRouter } from "next/navigation"
-import { use, useEffect, useState } from "react"
-
-import CreateTask from "@/components/collection/task/create-task"
-import TaskCard from "@/components/collection/task/task-card"
+import TaskDetailsDialog from "@/components/collection/task/task-details-dialog"
 import LoadingAndRetry from "@/components/shared/loading-and-retry"
 import Container from "@/components/styled-components/container"
 import InlineEditableInput from "@/components/styled-components/inline-editable-input"
@@ -37,6 +22,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTRPC } from "@/trpc/react"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+  ArrowBigLeft,
+  CogIcon,
+  EllipsisIcon,
+  ListChecksIcon,
+  TrashIcon,
+  TvIcon,
+} from "lucide-react"
+import { AnimatePresence, motion } from "motion/react"
+import Link from "next/link"
+import { notFound, useRouter } from "next/navigation"
+import { use, useEffect, useState } from "react"
 
 export default function CollectionDetails({
   params,
@@ -231,7 +229,10 @@ export default function CollectionDetails({
               {/* {collectionType === "TMDB" ? ( */}
               {/* <MediaCard task={task} /> */}
               {/* ) : ( */}
-              <TaskCard task={task} />
+              <TaskDetailsDialog
+                collectionId={collection.id}
+                taskIdToEdit={task.id}
+              />
               {/* )} */}
             </motion.div>
           ))}
@@ -239,7 +240,7 @@ export default function CollectionDetails({
       </div>
 
       <div className="rounded-xl p-4">
-        <CreateTask collectionId={collection.id} />
+        <TaskDetailsDialog collectionId={collection.id} taskIdToEdit={null} />
       </div>
     </Container>
   )

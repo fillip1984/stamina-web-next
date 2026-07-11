@@ -19,15 +19,13 @@ export const PriorityEnum = baseSchema.enum("todo_priority", [
 ])
 
 // Enums, https://github.com/drizzle-team/drizzle-orm/discussions/1914
-export enum MeasurableEnum {
-  Tally = "Tally",
+export enum TaskEnum {
+  Todo = "Todo",
   Countdown = "Countdown",
   Seeking = "Seeking",
+  Tally = "Tally",
 }
-export const measurablePgEnum = baseSchema.enum(
-  "measurableEnum",
-  MeasurableEnum
-)
+export const taskPgEnum = baseSchema.enum("taskEnum", TaskEnum)
 
 export enum DaytimeEnum {
   Morning = "Morning",

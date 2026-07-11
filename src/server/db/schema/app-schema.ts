@@ -5,10 +5,10 @@ import {
   CollectionTypeEnum,
   dayOfWeekPgEnum,
   daytimePgEnum,
-  measurablePgEnum,
   onCompletePgEnum,
   PriorityEnum,
   StatusEnum,
+  taskPgEnum,
 } from "./enums"
 
 export const collections = baseSchema.table("collection", (t) => ({
@@ -32,6 +32,21 @@ export const tags = baseSchema.table("tag", (t) => ({
     .references(() => user.id),
 }))
 
+export const tasksToTags = baseSchema.table("task_to_tag", (t) => ({
+  taskId: t
+    .text("task_id")
+    .notNull()
+    .references(() => tasks.id, { onDelete: "cascade" }),
+  tagId: t
+    .text("tag_id")
+    .notNull()
+    .references(() => tags.id, { onDelete: "cascade" }),
+  userId: t
+    .text("user_id")
+    .notNull()
+    .references(() => user.id),
+}))
+
 export const tasks = baseSchema.table("task", (t) => ({
   ...baseFields,
   name: t.varchar("name", { length: 256 }).notNull(),
@@ -42,7 +57,7 @@ export const tasks = baseSchema.table("task", (t) => ({
   dueDate: t.timestamp(),
   // dueDate: t.date("due_date", { mode: "string" }),
   position: t.integer("position"),
-  type: measurablePgEnum("type").notNull(),
+  type: taskPgEnum("type").notNull(),
   setDate: t.timestamp("set_date").notNull(),
   suggestedDayTime: daytimePgEnum("suggested_day_time"),
   suggestedDay: dayOfWeekPgEnum("suggested_day"),

@@ -13,12 +13,25 @@ export const relations = defineRelations(schema, (r) => ({
       to: r.user.id,
     }),
   },
+  tags: {
+    tasksToTags: r.many.tasksToTags({
+      from: r.tags.id,
+      to: r.tasksToTags.tagId,
+    }),
+    user: r.one.user({
+      from: r.tags.userId,
+      to: r.user.id,
+    }),
+  },
   tasks: {
     collection: r.one.collections({
       from: r.tasks.collectionId,
       to: r.collections.id,
     }),
-    tags: r.many.tasks(),
+    tags: r.many.tasksToTags({
+      from: r.tasks.id,
+      to: r.tasksToTags.taskId,
+    }),
     user: r.one.user({
       from: r.tasks.userId,
       to: r.user.id,

@@ -1,8 +1,8 @@
-import z from "zod/v4";
+import z from "zod/v4"
 
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc"
 
-export const BloodPressureReadingRouter = createTRPCRouter({
+export const bloodPressureReadingRouter = createTRPCRouter({
   // create: protectedProcedure
   //   .input(
   //     z.object({
@@ -107,9 +107,9 @@ export const BloodPressureReadingRouter = createTRPCRouter({
           id: input.id,
           userId: ctx.session.user.id,
         },
-      });
+      })
     }),
-});
+})
 
 // const determineCategory = (bpr: { systolic: number; diastolic: number }) => {
 //   if (bpr.systolic > 180 || bpr.diastolic > 120) {

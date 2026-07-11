@@ -4,7 +4,7 @@ import { weightGoals } from "@/server/db/schema"
 import { and, eq } from "drizzle-orm"
 import { createTRPCRouter, protectedProcedure } from "../trpc"
 
-export const WeighInRouter = createTRPCRouter({
+export const weighInRouter = createTRPCRouter({
   // create: protectedProcedure
   //   .input(
   //     z.object({
