@@ -35,7 +35,6 @@ import {
 import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
 
-import type { TaskType } from "@/server/api/types"
 import type {
   DayOfWeekEnum,
   DaytimeEnum,
@@ -57,8 +56,6 @@ export default function TaskDetailsDialog({
   isOpen: boolean
   close: () => void
 }) {
-  const isNew = !taskIdToEdit
-
   const trpc = useTRPC()
   const queryClient = useQueryClient()
 
@@ -509,8 +506,4 @@ export default function TaskDetailsDialog({
       </DialogContent>
     </Dialog>
   )
-}
-
-const TaskCard = ({ task }: { task: TaskType }) => {
-  return <div></div>
 }

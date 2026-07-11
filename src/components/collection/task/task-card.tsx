@@ -27,11 +27,14 @@ import {
   TargetIcon,
   TrashIcon,
 } from "lucide-react"
+import DeleteTaskConfirmation from "./delete-task-confirmation"
+import OnCompleteModal from "./on-complete-dialog"
 import TaskDetailsDialog from "./task-details-dialog"
 
 export default function TaskCard({ task }: { task: TaskType }) {
   // const { isOpen, show, hide } = useModal()
   const [isTaskDetailsOpen, setIsTaskDetailsOpen] = useState(false)
+  const [isDeleteTaskOpen, setIsDeleteTaskOpen] = useState(false)
   const [isOnCompleteOpen, setIsOnCompleteOpen] = useState(false)
 
   // const [isExpanded, setIsExpanded] = useState(false);
@@ -47,15 +50,6 @@ export default function TaskCard({ task }: { task: TaskType }) {
           trpc.collection.readAll.queryFilter()
         )
         await queryClient.invalidateQueries(trpc.result.findAll.queryFilter())
-      },
-    })
-  )
-  const deleteTask = useMutation(
-    trpc.task.delete.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(
-          trpc.collection.readAll.queryFilter()
-        )
       },
     })
   )
@@ -230,7 +224,7 @@ export default function TaskCard({ task }: { task: TaskType }) {
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   variant="destructive"
-                  // onClick={() => deleteTask.mutateAsync(task.id)}
+                  onClick={() => setIsDeleteTaskOpen(true)}
                 >
                   <TrashIcon />
                   Delete
@@ -247,7 +241,19 @@ export default function TaskCard({ task }: { task: TaskType }) {
         isOpen={isTaskDetailsOpen}
         close={() => setIsTaskDetailsOpen(false)}
       />
-      {/* {isOnCompleteOpen && <OnCompleteModal task={task} dismiss={hide} />} */}
+
+      <DeleteTaskConfirmation
+        open={isDeleteTaskOpen}
+        close={() => setIsDeleteTaskOpen(false)}
+        task={task}
+      />
+
+      {isOnCompleteOpen && (
+        <OnCompleteModal
+          task={task}
+          dismiss={() => setIsOnCompleteOpen(false)}
+        />
+      )}
     </>
   )
 }

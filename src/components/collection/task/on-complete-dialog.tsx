@@ -1,84 +1,83 @@
-"use client";
+"use client"
 
-import type { MeasurableType } from "@stamina/api";
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ChevronDownIcon } from "lucide-react";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { BsHeartPulseFill } from "react-icons/bs";
-import { FaCalendarDay } from "react-icons/fa";
-import { IoScaleOutline } from "react-icons/io5";
-import { PiPersonBold } from "react-icons/pi";
-
-import { OnCompleteEnum } from "@stamina/db/schema";
-
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogFooter,
+  DialogHeader,
   DialogTitle,
-} from "~/components/ui/dialog";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
-import { useTRPC } from "~/trpc/react";
-import { Button } from "../ui/button";
-import { Calendar } from "../ui/calendar";
-import { DialogFooter, DialogHeader } from "../ui/dialog";
+} from "@/components/ui/dialog"
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "../ui/input-group";
-import { Label } from "../ui/label";
+} from "@/components/ui/input-group"
+import { Label } from "@/components/ui/label"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import type { TaskType } from "@/server/api/types"
+import { useTRPC } from "@/trpc/react"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import {
+  BicepsFlexedIcon,
+  CalendarDaysIcon,
+  ChevronDownIcon,
+  HeartIcon,
+  HeartOffIcon,
+  HeartPulseIcon,
+} from "lucide-react"
+import Image from "next/image"
+import { useState } from "react"
 
 export default function OnCompleteModal({
-  measurable,
+  task,
   dismiss,
 }: {
-  measurable: MeasurableType;
-  dismiss: () => void;
+  task: TaskType
+  dismiss: () => void
 }) {
-  if (OnCompleteEnum.Weigh_in === measurable.onComplete) {
-    return <WeighIn measurable={measurable} dismiss={dismiss} />;
-  } else if (OnCompleteEnum.Blood_pressure_reading === measurable.onComplete) {
-    return <BloodPressureReading measurable={measurable} dismiss={dismiss} />;
+  if ("Weigh_in" === task.onComplete) {
+    return <WeighIn task={task} dismiss={dismiss} />
+  } else if ("Blood_pressure_reading" === task.onComplete) {
+    return <BloodPressureReading task={task} dismiss={dismiss} />
   } else {
-    return null;
+    return null
   }
 }
 
 const WeighIn = ({
-  measurable,
+  task,
   dismiss,
 }: {
-  measurable: MeasurableType;
-  dismiss: () => void;
+  task: TaskType
+  dismiss: () => void
 }) => {
-  const [datePickerOpen, setDatePickerOpen] = useState(false);
-  const [date, setDate] = useState(new Date());
-  const [weight, setWeight] = useState("");
-  const [bodyFatPercentage, setBodyFatPercentage] = useState("");
+  const [datePickerOpen, setDatePickerOpen] = useState(false)
+  const [date, setDate] = useState(new Date())
+  const [weight, setWeight] = useState("")
+  const [bodyFatPercentage, setBodyFatPercentage] = useState("")
 
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
+  const trpc = useTRPC()
+  const queryClient = useQueryClient()
   const completeWeighIn = useMutation(
-    trpc.measurable.complete.mutationOptions({
+    trpc.task.complete.mutationOptions({
       onSuccess: async () => {
-        await queryClient.invalidateQueries(
-          trpc.measurable.findAll.queryFilter(),
-        );
-        await queryClient.invalidateQueries(trpc.result.findAll.queryFilter());
-        dismiss();
+        // await queryClient.invalidateQueries(trpc.task.findAll.queryFilter())
+        await queryClient.invalidateQueries(trpc.result.findAll.queryFilter())
+        dismiss()
       },
-    }),
-  );
+    })
+  )
   // const utils = api.useUtils();
-  // const { mutate: completeWeighIn } = api.measurable.complete.useMutation({
+  // const { mutate: completeWeighIn } = api.task.complete.useMutation({
   //   onSuccess: async () => {
-  //     await utils.measurable.findAll.invalidate();
+  //     await utils.task.findAll.invalidate();
   //     await utils.result.findAll.invalidate();
   //     dismiss();
   //   },
@@ -86,7 +85,7 @@ const WeighIn = ({
 
   const handleSaveWeighIn = () => {
     void completeWeighIn.mutateAsync({
-      id: measurable.id,
+      id: task.id,
       weighIn: {
         date,
         weight: parseFloat(weight),
@@ -94,8 +93,8 @@ const WeighIn = ({
           ? parseFloat(bodyFatPercentage)
           : undefined,
       },
-    });
-  };
+    })
+  }
 
   return (
     <Dialog open={true} onOpenChange={dismiss}>
@@ -105,27 +104,29 @@ const WeighIn = ({
         </DialogHeader>
         <div className="grid gap-3">
           <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
-            <PopoverTrigger asChild>
-              <InputGroup className="w-40">
-                <InputGroupAddon>
-                  <FaCalendarDay />
-                </InputGroupAddon>
-                <Button variant="ghost">
-                  {
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                    date ? date.toLocaleDateString() : "Select date"
-                  }
-                  <ChevronDownIcon />
-                </Button>
-              </InputGroup>
-            </PopoverTrigger>
+            <PopoverTrigger
+              render={
+                <InputGroup className="w-40">
+                  <InputGroupAddon>
+                    <CalendarDaysIcon />
+                  </InputGroupAddon>
+                  <Button variant="ghost">
+                    {
+                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                      date ? date.toLocaleDateString() : "Select date"
+                    }
+                    <ChevronDownIcon />
+                  </Button>
+                </InputGroup>
+              }
+            ></PopoverTrigger>
             <PopoverContent>
               <Calendar
                 mode="single"
                 selected={date}
                 onSelect={(date) => {
-                  setDate(date ?? new Date());
-                  setDatePickerOpen(false);
+                  setDate(date ?? new Date())
+                  setDatePickerOpen(false)
                 }}
               />
             </PopoverContent>
@@ -133,7 +134,12 @@ const WeighIn = ({
 
           <InputGroup className="w-40">
             <InputGroupAddon>
-              <IoScaleOutline />
+              <Image
+                src="/weight-scale.png"
+                alt="Weight Scale"
+                width={20}
+                height={20}
+              />
             </InputGroupAddon>
             <InputGroupInput
               value={weight}
@@ -145,7 +151,7 @@ const WeighIn = ({
 
           <InputGroup className="w-40">
             <InputGroupAddon>
-              <PiPersonBold />
+              <BicepsFlexedIcon />
             </InputGroupAddon>
             <InputGroupInput
               value={bodyFatPercentage}
@@ -156,58 +162,58 @@ const WeighIn = ({
           </InputGroup>
         </div>
         <DialogFooter>
-          <DialogClose asChild>
-            <Button variant={"outline"} onClick={dismiss}>
-              Cancel
-            </Button>
-          </DialogClose>
+          <DialogClose
+            render={
+              <Button variant={"outline"} onClick={dismiss}>
+                Cancel
+              </Button>
+            }
+          ></DialogClose>
           <Button onClick={handleSaveWeighIn} disabled={!weight}>
             Save
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
 const BloodPressureReading = ({
-  measurable,
+  task,
   dismiss,
 }: {
-  measurable: MeasurableType;
-  dismiss: () => void;
+  task: TaskType
+  dismiss: () => void
 }) => {
-  const [datePickerOpen, setDatePickerOpen] = useState(false);
-  const [date, setDate] = useState(new Date());
-  const [systolic, setSystolic] = useState("");
-  const [diastolic, setDiastolic] = useState("");
-  const [heartRate, setHeartRate] = useState("");
+  const [datePickerOpen, setDatePickerOpen] = useState(false)
+  const [date, setDate] = useState(new Date())
+  const [systolic, setSystolic] = useState("")
+  const [diastolic, setDiastolic] = useState("")
+  const [heartRate, setHeartRate] = useState("")
 
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
+  const trpc = useTRPC()
+  const queryClient = useQueryClient()
   const completeBloodPressure = useMutation(
-    trpc.measurable.complete.mutationOptions({
+    trpc.task.complete.mutationOptions({
       onSuccess: async () => {
-        await queryClient.invalidateQueries(
-          trpc.measurable.findAll.queryFilter(),
-        );
-        await queryClient.invalidateQueries(trpc.result.findAll.queryFilter());
-        dismiss();
+        // await queryClient.invalidateQueries(trpc.task.read.queryFilter())
+        await queryClient.invalidateQueries(trpc.result.findAll.queryFilter())
+        dismiss()
       },
-    }),
-  );
+    })
+  )
 
   const handleSaveBloodPressure = async () => {
     await completeBloodPressure.mutateAsync({
-      id: measurable.id,
+      id: task.id,
       bloodPressureReading: {
         date,
         systolic: parseInt(systolic),
         diastolic: parseInt(diastolic),
         pulse: heartRate ? parseInt(heartRate) : undefined,
       },
-    });
-  };
+    })
+  }
 
   return (
     <Dialog open={true} onOpenChange={dismiss}>
@@ -217,27 +223,29 @@ const BloodPressureReading = ({
         </DialogHeader>
         <div className="grid justify-center gap-3">
           <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
-            <PopoverTrigger asChild>
-              <InputGroup>
-                <InputGroupAddon>
-                  <FaCalendarDay />
-                </InputGroupAddon>
-                <Button variant="ghost">
-                  {
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                    date ? date.toLocaleDateString() : "Select date"
-                  }
-                  <ChevronDownIcon />
-                </Button>
-              </InputGroup>
-            </PopoverTrigger>
+            <PopoverTrigger
+              render={
+                <InputGroup>
+                  <InputGroupAddon>
+                    <CalendarDaysIcon />
+                  </InputGroupAddon>
+                  <Button variant="ghost">
+                    {
+                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                      date ? date.toLocaleDateString() : "Select date"
+                    }
+                    <ChevronDownIcon />
+                  </Button>
+                </InputGroup>
+              }
+            ></PopoverTrigger>
             <PopoverContent>
               <Calendar
                 mode="single"
                 selected={date}
                 onSelect={(date) => {
-                  setDate(date ?? new Date());
-                  setDatePickerOpen(false);
+                  setDate(date ?? new Date())
+                  setDatePickerOpen(false)
                 }}
               />
             </PopoverContent>
@@ -247,7 +255,8 @@ const BloodPressureReading = ({
             <Label htmlFor="systolic">Systolic</Label>
             <InputGroup>
               <InputGroupAddon>
-                <AiFillHeart />
+                <HeartOffIcon />
+                {/* <AiFillHeart /> */}
               </InputGroupAddon>
               <InputGroupInput
                 id="systolic"
@@ -263,7 +272,7 @@ const BloodPressureReading = ({
             <Label htmlFor="diastolic">Diastolic</Label>
             <InputGroup>
               <InputGroupAddon>
-                <AiOutlineHeart />
+                <HeartIcon />
               </InputGroupAddon>
               <InputGroupInput
                 id="diastolic"
@@ -279,7 +288,8 @@ const BloodPressureReading = ({
             <Label htmlFor="heartRate">Heart Rate</Label>
             <InputGroup>
               <InputGroupAddon>
-                <BsHeartPulseFill />
+                <HeartPulseIcon />
+                {/* <BsHeartPulseFill /> */}
               </InputGroupAddon>
               <InputGroupInput
                 id="heartRate"
@@ -292,9 +302,9 @@ const BloodPressureReading = ({
           </div>
         </div>
         <DialogFooter className="mt-8 flex flex-row">
-          <DialogClose asChild>
-            <Button variant={"secondary"}>Cancel</Button>
-          </DialogClose>
+          <DialogClose
+            render={<Button variant={"secondary"}>Cancel</Button>}
+          ></DialogClose>
           <Button
             onClick={handleSaveBloodPressure}
             disabled={!systolic || !diastolic}
@@ -304,5 +314,5 @@ const BloodPressureReading = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
