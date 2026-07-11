@@ -24,7 +24,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -50,12 +49,14 @@ import { useTRPC } from "@/trpc/react"
 export default function TaskDetailsDialog({
   collectionId,
   taskIdToEdit,
+  isOpen,
+  close,
 }: {
   collectionId: string
   taskIdToEdit: string | null
+  isOpen: boolean
+  close: () => void
 }) {
-  const [isOpen, setIsOpen] = useState(false)
-
   const isNew = !taskIdToEdit
 
   const trpc = useTRPC()
@@ -74,10 +75,8 @@ export default function TaskDetailsDialog({
   const createTask = useMutation(
     trpc.task.create.mutationOptions({
       onSuccess: async () => {
-        await queryClient.invalidateQueries(
-          trpc.collection.readAll.queryFilter()
-        )
-        setIsOpen(false)
+        await queryClient.invalidateQueries(trpc.collection.pathFilter())
+        close()
       },
     })
   )
@@ -85,10 +84,8 @@ export default function TaskDetailsDialog({
   const updateTask = useMutation(
     trpc.task.update.mutationOptions({
       onSuccess: async () => {
-        await queryClient.invalidateQueries(
-          trpc.collection.readAll.queryFilter()
-        )
-        setIsOpen(false)
+        await queryClient.invalidateQueries(trpc.collection.pathFilter())
+        close()
       },
     })
   )
@@ -139,6 +136,21 @@ export default function TaskDetailsDialog({
         collectionId,
       })
     }
+    resetForm()
+  }
+
+  const resetForm = () => {
+    setId(null)
+    setName("")
+    setDescription("")
+    // setArea(null)
+    setType("Todo" as TaskEnum)
+    setSuggestedDayTime(null)
+    setSuggestedDay(null)
+    setDueDate(null)
+    setInterval(undefined)
+    setOnComplete(null)
+    setMode("Create")
   }
 
   const [validToCreate, setValidToCreate] = useState(false)
@@ -253,21 +265,10 @@ export default function TaskDetailsDialog({
       open={isOpen}
       onOpenChange={(open) => {
         if (!open) {
-          setIsOpen(false)
-        } else {
-          setIsOpen(true)
+          close()
         }
       }}
     >
-      <DialogTrigger
-        render={
-          isNew && taskToEdit ? (
-            <Button>Add Task</Button>
-          ) : (
-            <TaskCard task={taskToEdit} />
-          )
-        }
-      />
       <DialogContent className="h-3/4 w-full max-w-3/4 grid-rows-[auto_1fr_auto] sm:max-w-130 md:max-w-130 lg:max-w-130">
         <DialogHeader>
           <DialogTitle>{mode} Task</DialogTitle>

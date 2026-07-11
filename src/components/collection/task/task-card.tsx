@@ -27,9 +27,11 @@ import {
   TargetIcon,
   TrashIcon,
 } from "lucide-react"
+import TaskDetailsDialog from "./task-details-dialog"
 
 export default function TaskCard({ task }: { task: TaskType }) {
   // const { isOpen, show, hide } = useModal()
+  const [isTaskDetailsOpen, setIsTaskDetailsOpen] = useState(false)
   const [isOnCompleteOpen, setIsOnCompleteOpen] = useState(false)
 
   // const [isExpanded, setIsExpanded] = useState(false);
@@ -87,6 +89,7 @@ export default function TaskCard({ task }: { task: TaskType }) {
   return (
     <>
       <Item
+        onClick={() => setIsTaskDetailsOpen(true)}
         variant="outline"
         className="relative w-full items-start bg-card p-2"
       >
@@ -238,6 +241,12 @@ export default function TaskCard({ task }: { task: TaskType }) {
         </ItemActions>
       </Item>
 
+      <TaskDetailsDialog
+        collectionId={task.collectionId}
+        taskIdToEdit={task.id}
+        isOpen={isTaskDetailsOpen}
+        close={() => setIsTaskDetailsOpen(false)}
+      />
       {/* {isOnCompleteOpen && <OnCompleteModal task={task} dismiss={hide} />} */}
     </>
   )

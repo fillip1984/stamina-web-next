@@ -1,6 +1,7 @@
 "use client"
 
-import TaskDetailsDialog from "@/components/collection/task/task-details-dialog"
+import CreateTaskCard from "@/components/collection/task/create-task-card"
+import TaskCard from "@/components/collection/task/task-card"
 import LoadingAndRetry from "@/components/shared/loading-and-retry"
 import Container from "@/components/styled-components/container"
 import InlineEditableInput from "@/components/styled-components/inline-editable-input"
@@ -215,33 +216,29 @@ export default function CollectionDetails({
             {collection.tasks.length} tasks
           </Badge>
         </div>
-        <AnimatePresence>
-          {collection.tasks.map((task) => (
-            <motion.div
-              key={task.id}
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{
-                delayChildren: 0.2,
-              }}
-            >
-              {/* {collectionType === "TMDB" ? ( */}
-              {/* <MediaCard task={task} /> */}
-              {/* ) : ( */}
-              <TaskDetailsDialog
-                collectionId={collection.id}
-                taskIdToEdit={task.id}
-              />
-              {/* )} */}
-            </motion.div>
-          ))}
-        </AnimatePresence>
+        <div className="flex flex-col gap-1">
+          <AnimatePresence>
+            {collection.tasks.map((task) => (
+              <motion.div
+                key={task.id}
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{
+                  delayChildren: 0.2,
+                }}
+              >
+                <TaskCard task={task} />
+              </motion.div>
+            ))}
+            <CreateTaskCard collectionId={collection.id} />
+          </AnimatePresence>
+        </div>
       </div>
 
-      <div className="rounded-xl p-4">
+      {/* <div className="rounded-xl p-4">
         <TaskDetailsDialog collectionId={collection.id} taskIdToEdit={null} />
-      </div>
+      </div> */}
     </Container>
   )
 }
