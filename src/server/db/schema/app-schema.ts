@@ -22,31 +22,6 @@ export const collections = baseSchema.table("collection", (t) => ({
     .references(() => user.id, { onDelete: "cascade" }),
 }))
 
-export const tags = baseSchema.table("tag", (t) => ({
-  ...baseFields,
-  name: t.text("name").notNull(),
-  description: t.text("description").notNull(),
-  userId: t
-    .text("user_id")
-    .notNull()
-    .references(() => user.id),
-}))
-
-export const tasksToTags = baseSchema.table("task_to_tag", (t) => ({
-  taskId: t
-    .text("task_id")
-    .notNull()
-    .references(() => tasks.id, { onDelete: "cascade" }),
-  tagId: t
-    .text("tag_id")
-    .notNull()
-    .references(() => tags.id, { onDelete: "cascade" }),
-  userId: t
-    .text("user_id")
-    .notNull()
-    .references(() => user.id),
-}))
-
 export const tasks = baseSchema.table("task", (t) => ({
   ...baseFields,
   name: t.varchar("name", { length: 256 }).notNull(),
@@ -71,6 +46,31 @@ export const tasks = baseSchema.table("task", (t) => ({
     .text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
+}))
+
+export const tasksToTags = baseSchema.table("task_to_tag", (t) => ({
+  taskId: t
+    .text("task_id")
+    .notNull()
+    .references(() => tasks.id, { onDelete: "cascade" }),
+  tagId: t
+    .text("tag_id")
+    .notNull()
+    .references(() => tags.id, { onDelete: "cascade" }),
+  userId: t
+    .text("user_id")
+    .notNull()
+    .references(() => user.id),
+}))
+
+export const tags = baseSchema.table("tag", (t) => ({
+  ...baseFields,
+  name: t.text("name").notNull(),
+  description: t.text("description").notNull(),
+  userId: t
+    .text("user_id")
+    .notNull()
+    .references(() => user.id),
 }))
 
 export const results = baseSchema.table("result", (t) => ({

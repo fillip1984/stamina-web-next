@@ -36,6 +36,7 @@ import {
 import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
 
+import type { TaskType } from "@/server/api/types"
 import type {
   DayOfWeekEnum,
   DaytimeEnum,
@@ -54,6 +55,8 @@ export default function TaskDetailsDialog({
   taskIdToEdit: string | null
 }) {
   const [isOpen, setIsOpen] = useState(false)
+
+  const isNew = !taskIdToEdit
 
   const trpc = useTRPC()
   const queryClient = useQueryClient()
@@ -127,7 +130,7 @@ export default function TaskDetailsDialog({
         description,
         // areaId: area?.id ?? null,
         setDate: new Date(),
-        type,
+        type: type as TaskEnum,
         suggestedDay,
         suggestedDayTime,
         dueDate,
@@ -141,7 +144,7 @@ export default function TaskDetailsDialog({
   const [validToCreate, setValidToCreate] = useState(false)
   const validateForm = () => {
     if (name.trim().length === 0) return false
-    if (description.trim().length === 0) return false
+    // if (description.trim().length === 0) return false
     if (type === ("Countdown" as TaskEnum) && !dueDate) return false
 
     return true
@@ -256,7 +259,15 @@ export default function TaskDetailsDialog({
         }
       }}
     >
-      <DialogTrigger render={<Button>Add Task</Button>}></DialogTrigger>
+      <DialogTrigger
+        render={
+          isNew && taskToEdit ? (
+            <Button>Add Task</Button>
+          ) : (
+            <TaskCard task={taskToEdit} />
+          )
+        }
+      />
       <DialogContent className="h-3/4 w-full max-w-3/4 grid-rows-[auto_1fr_auto] sm:max-w-130 md:max-w-130 lg:max-w-130">
         <DialogHeader>
           <DialogTitle>{mode} Task</DialogTitle>
@@ -265,9 +276,8 @@ export default function TaskDetailsDialog({
             goal.
           </DialogDescription>
         </DialogHeader>
+        {/* TODO: look at refactoring with Field concepts */}
         <div className="-mx-4 mt-0 flex flex-col gap-2 overflow-y-auto px-4">
-          {/* <div className="no-scrollbar grid grow gap-2 overflow-y-auto px-4 py-2"> */}
-          {/* <div className="-mx-4 mt-0 no-scrollbar max-h-[50vh] overflow-y-auto px-4"> */}
           <div className="grid gap-2">
             <Label htmlFor="name">Name</Label>
             <Input
@@ -498,4 +508,8 @@ export default function TaskDetailsDialog({
       </DialogContent>
     </Dialog>
   )
+}
+
+const TaskCard = ({ task }: { task: TaskType }) => {
+  return <div></div>
 }
