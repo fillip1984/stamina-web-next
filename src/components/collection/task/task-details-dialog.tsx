@@ -257,7 +257,7 @@ export default function TaskDetailsDialog({
       }}
     >
       <DialogTrigger render={<Button>Add Task</Button>}></DialogTrigger>
-      <DialogContent className="h-3/4 w-full max-w-3/4 sm:max-w-130 md:max-w-130 lg:max-w-130">
+      <DialogContent className="h-3/4 w-full max-w-3/4 grid-rows-[auto_1fr_auto] sm:max-w-130 md:max-w-130 lg:max-w-130">
         <DialogHeader>
           <DialogTitle>{mode} Task</DialogTitle>
           <DialogDescription>
@@ -265,7 +265,9 @@ export default function TaskDetailsDialog({
             goal.
           </DialogDescription>
         </DialogHeader>
-        <div className="flex flex-col gap-3 overflow-y-auto px-4 py-2">
+        <div className="-mx-4 mt-0 flex flex-col gap-2 overflow-y-auto px-4">
+          {/* <div className="no-scrollbar grid grow gap-2 overflow-y-auto px-4 py-2"> */}
+          {/* <div className="-mx-4 mt-0 no-scrollbar max-h-[50vh] overflow-y-auto px-4"> */}
           <div className="grid gap-2">
             <Label htmlFor="name">Name</Label>
             <Input
@@ -286,8 +288,8 @@ export default function TaskDetailsDialog({
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {/* <div className="grid gap-2">
+          {/* <div className="grid grid-cols-1 gap-2 sm:grid-cols-2"> */}
+          {/* <div className="grid gap-2">
               <Label htmlFor="area">Area</Label>
               <Combobox
                 id="area"
@@ -305,13 +307,13 @@ export default function TaskDetailsDialog({
                 className="w-52"
               />
             </div> */}
-            {/* <div className="grid gap-2">
+          {/* <div className="grid gap-2">
               <Label>Area Description</Label>
               <span className="text-sm text-muted-foreground">
                 {area?.description ?? "Uncategorized"}
               </span>
             </div> */}
-          </div>
+          {/* </div> */}
           <div className="grid gap-3">
             <Label htmlFor="onComplete">On Complete Action</Label>
             <Combobox
@@ -413,7 +415,7 @@ export default function TaskDetailsDialog({
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div className="grid grid-cols-2 gap-3">
                   <div className="grid gap-2">
                     <Label htmlFor="date">Due Date</Label>
                     <Popover
@@ -457,7 +459,7 @@ export default function TaskDetailsDialog({
                       value={interval}
                       onChange={(e) => setInterval(Number(e.target.value))}
                       placeholder="days"
-                      className="w-24"
+                      // className="w-24"
                     />
                     {/*<span className="text-muted-foreground text-sm">
                       {interval
