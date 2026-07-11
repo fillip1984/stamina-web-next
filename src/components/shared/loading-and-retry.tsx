@@ -15,7 +15,7 @@ export default function LoadingAndRetry({
 }) {
   return (
     <div className="mt-12 flex grow justify-center">
-      {isLoading && <Spinner className="mx-auto h-24 w-24" />}
+      {isLoading && <Spinner className="mx-auto h-24 w-24 text-primary" />}
 
       {isError && (
         <div className="flex flex-col gap-3">

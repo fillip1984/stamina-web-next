@@ -17,6 +17,7 @@ import {
 import { Field, FieldGroup } from "../ui/field"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
+import { Textarea } from "../ui/textarea"
 
 export default function CreateCollection() {
   const [isOpen, setIsOpen] = useState(false)
@@ -80,7 +81,7 @@ export default function CreateCollection() {
             </Field>
             <Field>
               <Label htmlFor="description">Description</Label>
-              <Input
+              <Textarea
                 id="description"
                 name="description"
                 value={description}
