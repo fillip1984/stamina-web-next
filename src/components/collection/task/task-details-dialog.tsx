@@ -257,8 +257,8 @@ export default function TaskDetailsDialog({
       }}
     >
       <DialogTrigger render={<Button>Add Task</Button>}></DialogTrigger>
-      <DialogContent className="h-3/4 px-0 md:max-w-3/4 lg:h-2/3 lg:max-w-1/2">
-        <DialogHeader className="px-2">
+      <DialogContent className="h-3/4 w-full max-w-3/4 sm:max-w-130 md:max-w-130 lg:max-w-130">
+        <DialogHeader>
           <DialogTitle>{mode} Task</DialogTitle>
           <DialogDescription>
             {mode} task item, task items are used to track progress towards a
@@ -338,15 +338,19 @@ export default function TaskDetailsDialog({
           </div>
           <div className="grid gap-2">
             <Label htmlFor="type">Type</Label>
-            <div className="flex flex-wrap justify-center gap-2">
+            <div className="flex flex-wrap justify-center gap-1">
               {taskTypes.map((t) => (
                 <div
                   key={t.label}
                   onClick={() => setType(t.label as TaskEnum)}
-                  className={`flex h-18 w-20 flex-col items-center justify-center gap-2 rounded-md select-none ${type === (t.label as TaskEnum) ? "border-2 border-accent bg-accent/40" : "border"} p-4`}
+                  className={`flex h-20 w-20 flex-col items-center justify-center gap-3 rounded-md select-none ${type === (t.label as TaskEnum) ? "border-2 border-primary bg-primary/5" : "border"} p-4`}
                 >
                   <span>{t.icon}</span>
-                  <span>{t.label}</span>
+                  <span
+                    className={`text-xs text-muted-foreground ${type === (t.label as TaskEnum) ? "text-primary" : ""}`}
+                  >
+                    {t.label}
+                  </span>
                 </div>
               ))}
             </div>
