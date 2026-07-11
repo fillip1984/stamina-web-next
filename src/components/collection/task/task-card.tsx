@@ -23,7 +23,6 @@ import {
   CheckIcon,
   EllipsisVerticalIcon,
   EyeIcon,
-  PencilIcon,
   TargetIcon,
   TrashIcon,
 } from "lucide-react"
@@ -67,7 +66,8 @@ export default function TaskCard({ task }: { task: TaskType }) {
   //   },
   // });
 
-  const handleComplete = async () => {
+  const handleComplete = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
     if (task.onComplete) {
       setIsOnCompleteOpen(true)
     } else {
@@ -201,20 +201,17 @@ export default function TaskCard({ task }: { task: TaskType }) {
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
-                <Button variant="ghost" size="sm">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <EllipsisVerticalIcon />
                 </Button>
               }
             ></DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuGroup>
-                <DropdownMenuItem
-                // onClick={handleEdit}
-                >
-                  <PencilIcon />
-                  Edit
-                </DropdownMenuItem>
-
                 <DropdownMenuItem>
                   <EyeIcon />
                   View Activity
@@ -224,7 +221,10 @@ export default function TaskCard({ task }: { task: TaskType }) {
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   variant="destructive"
-                  onClick={() => setIsDeleteTaskOpen(true)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setIsDeleteTaskOpen(true)
+                  }}
                 >
                   <TrashIcon />
                   Delete
