@@ -48,6 +48,7 @@ export const taskRouter = createTRPCRouter({
   readById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
+      console.log("Reading task with id:", input.id)
       return await db.query.tasks.findFirst({
         where: {
           id: input.id,

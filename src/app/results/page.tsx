@@ -94,7 +94,6 @@ const WeighInResult = ({ weighIn }: { weighIn: WeighInType }) => {
   const weightGoal = useQuery(trpc.weighIn.getWeightGoal.queryOptions())
   const lastWeighIn = useQuery(
     trpc.weighIn.readById.queryOptions(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       { id: weighIn.previousWeighInId! },
       {
         enabled: !!weighIn.previousWeighInId,
@@ -213,7 +212,6 @@ const BloodPressureResult = ({
   const trpc = useTRPC()
   const lastBloodPressureReading = useQuery(
     trpc.bloodPressureReading.readById.queryOptions(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       { id: bloodPressureReading.previousBloodPressureReadingId! },
       {
         enabled: !!bloodPressureReading.previousBloodPressureReadingId,

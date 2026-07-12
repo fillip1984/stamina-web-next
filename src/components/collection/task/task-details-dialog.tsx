@@ -1,6 +1,6 @@
 "use client"
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import type { Day } from "date-fns"
 import { nextDay } from "date-fns"
 import {
@@ -35,6 +35,7 @@ import {
 import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
 
+import type { TaskType } from "@/server/api/types"
 import type {
   DayOfWeekEnum,
   DaytimeEnum,
@@ -46,28 +47,16 @@ import { useTRPC } from "@/trpc/react"
 // type DaytimeEnum = (typeof daytimeEnum.enumValues)[number];
 
 export default function TaskDetailsDialog({
-  collectionId,
-  taskIdToEdit,
+  task,
   isOpen,
   close,
 }: {
-  collectionId: string
-  taskIdToEdit: string | null
+  task: TaskType
   isOpen: boolean
   close: () => void
 }) {
   const trpc = useTRPC()
   const queryClient = useQueryClient()
-
-  // const { data: areas } = useQuery(trpc.area.findAll.queryOptions())
-  const { data: taskToEdit } = useQuery(
-    trpc.task.readById.queryOptions(
-      { id: taskIdToEdit as string },
-      {
-        enabled: !!taskIdToEdit,
-      }
-    )
-  )
 
   const createTask = useMutation(
     trpc.task.create.mutationOptions({
@@ -89,10 +78,8 @@ export default function TaskDetailsDialog({
 
   const [mode, setMode] = useState<"Create" | "Update">("Create")
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
-  const [id, setId] = useState<string | null>(null)
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
-  // const [area, setArea] = useState<AreaType | null>(null)
   const [type, setType] = useState<TaskEnum>("Todo" as TaskEnum)
   const [suggestedDayTime, setSuggestedDayTime] = useState<DaytimeEnum | null>(
     null
@@ -103,26 +90,24 @@ export default function TaskDetailsDialog({
   const [onComplete, setOnComplete] = useState<OnCompleteEnum | null>(null)
 
   const handleCreateOrUpdate = async () => {
-    if (mode === "Update" && id) {
+    if (mode === "Update") {
       await updateTask.mutateAsync({
-        id,
+        id: task.id,
         name,
         description,
-        // areaId: area?.id ?? null,
         type,
         suggestedDay: suggestedDay,
         suggestedDayTime: suggestedDayTime,
         dueDate: dueDate,
         interval,
         onComplete,
-        complete: taskToEdit?.complete ?? false,
-        collectionId,
+        complete: task.complete,
+        collectionId: task.collectionId,
       })
     } else {
       await createTask.mutateAsync({
         name,
         description,
-        // areaId: area?.id ?? null,
         setDate: new Date(),
         type: type as TaskEnum,
         suggestedDay,
@@ -130,17 +115,15 @@ export default function TaskDetailsDialog({
         dueDate,
         interval,
         onComplete,
-        collectionId,
+        collectionId: task.collectionId,
       })
     }
     resetForm()
   }
 
   const resetForm = () => {
-    setId(null)
     setName("")
     setDescription("")
-    // setArea(null)
     setType("Todo" as TaskEnum)
     setSuggestedDayTime(null)
     setSuggestedDay(null)
@@ -153,7 +136,6 @@ export default function TaskDetailsDialog({
   const [validToCreate, setValidToCreate] = useState(false)
   const validateForm = () => {
     if (name.trim().length === 0) return false
-    // if (description.trim().length === 0) return false
     if (type === ("Countdown" as TaskEnum) && !dueDate) return false
 
     return true
@@ -166,33 +148,30 @@ export default function TaskDetailsDialog({
 
   // UX: when editing, populate fields or set defaults when creating new
   useEffect(() => {
-    if (taskToEdit) {
+    if (task.id === "new") {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setId(taskToEdit.id)
-      setName(taskToEdit.name)
-      setDescription(taskToEdit.description ?? "")
-      // setArea(areas?.find((a) => a.id === taskToEdit.areaId) ?? null)
-      setType(taskToEdit.type)
-      setSuggestedDay(taskToEdit.suggestedDay)
-      setSuggestedDayTime(taskToEdit.suggestedDayTime)
-      setDueDate(taskToEdit.dueDate)
-      setInterval(taskToEdit.interval ?? undefined)
-      setOnComplete(taskToEdit.onComplete ?? null)
-      setMode("Update")
-    } else {
-      setId(null)
+      setMode("Create")
       setName("")
       setDescription("")
-      // setArea(null)
       setType("Todo" as TaskEnum)
       setSuggestedDayTime(null)
       setSuggestedDay(null)
       setDueDate(null)
       setInterval(undefined)
       setOnComplete(null)
-      setMode("Create")
+    } else {
+      setMode("Update")
+      setName(task.name)
+      setDescription(task.description ?? "")
+      setType(task.type)
+      setSuggestedDay(task.suggestedDay)
+      setSuggestedDayTime(task.suggestedDayTime)
+      setDueDate(task.dueDate)
+      setInterval(task.interval ?? undefined)
+      setOnComplete(task.onComplete ?? null)
+      setMode("Update")
     }
-  }, [taskToEdit])
+  }, [task])
 
   const daysOfWeek = [
     { id: "Sunday", label: "Sunday" },
@@ -209,7 +188,7 @@ export default function TaskDetailsDialog({
     if (type !== ("Countdown" as TaskEnum)) return
     if (!suggestedDay) return
     // only update if changed
-    if (taskToEdit?.suggestedDay === suggestedDay) return
+    if (task.suggestedDay === suggestedDay) return
 
     const today = new Date()
     const todayDayOfWeek = today.getDay() // 0 (Sun) - 6 (Sat)
@@ -496,7 +475,7 @@ export default function TaskDetailsDialog({
           >
             {createTask.isPending || updateTask.isPending ? (
               <Spinner />
-            ) : taskIdToEdit ? (
+            ) : "Update" === mode ? (
               "Update"
             ) : (
               "Create"

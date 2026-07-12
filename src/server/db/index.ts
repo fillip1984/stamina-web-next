@@ -13,5 +13,5 @@ export const db = drizzle({
   client: client,
   ...schema,
   ...relations,
-  logger: env.NODE_ENV !== "production",
+  // logger: env.NODE_ENV !== "production",
 })

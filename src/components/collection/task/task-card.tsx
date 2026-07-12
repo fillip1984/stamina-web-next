@@ -236,8 +236,7 @@ export default function TaskCard({ task }: { task: TaskType }) {
       </Item>
 
       <TaskDetailsDialog
-        collectionId={task.collectionId}
-        taskIdToEdit={task.id}
+        task={task}
         isOpen={isTaskDetailsOpen}
         close={() => setIsTaskDetailsOpen(false)}
       />

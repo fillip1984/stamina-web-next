@@ -8,6 +8,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 import { getSession } from "@/server/better-auth/server"
 import { TRPCReactProvider } from "@/trpc/react"
+import type { Metadata } from "next"
 import "./globals.css"
 
 const notoSansHeading = Noto_Sans({
@@ -21,6 +22,12 @@ const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 })
+
+export const metadata: Metadata = {
+  title: "Stamina",
+  description:
+    "Productivity app to help you build good habits and get things done",
+}
 
 export default async function RootLayout({
   children,

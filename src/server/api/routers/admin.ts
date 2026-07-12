@@ -48,7 +48,7 @@ export const adminRouter = createTRPCRouter({
           z.object({
             id: z.string(),
             name: z.string().min(1),
-            description: z.string().optional(),
+            description: z.string().nullable(),
             type: z.enum(TaskEnum),
             setDate: z.date(),
             suggestedDay: z.enum(DayOfWeekEnum).nullable(),

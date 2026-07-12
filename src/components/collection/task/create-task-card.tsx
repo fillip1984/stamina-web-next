@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import type { TaskType } from "@/server/api/types"
 import { PlusIcon } from "lucide-react"
 import { useState } from "react"
 import TaskDetailsDialog from "./task-details-dialog"
@@ -11,7 +12,23 @@ export default function CreateTaskCard({
   collectionId: string
 }) {
   const [isOpen, setIsOpen] = useState(false)
-
+  const [task] = useState<TaskType>({
+    id: "new",
+    collectionId,
+    name: "",
+    description: "",
+    setDate: new Date(),
+    complete: false,
+    interval: null,
+    position: 0,
+    dueDate: null,
+    onComplete: null,
+    priority: null,
+    status: "todo",
+    suggestedDay: null,
+    suggestedDayTime: null,
+    type: "Todo" as TaskType["type"],
+  })
   return (
     <>
       <Button
@@ -23,8 +40,7 @@ export default function CreateTaskCard({
         Add Task
       </Button>
       <TaskDetailsDialog
-        collectionId={collectionId}
-        taskIdToEdit={null}
+        task={task}
         isOpen={isOpen}
         close={() => setIsOpen(false)}
       />

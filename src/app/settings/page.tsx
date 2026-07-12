@@ -8,7 +8,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group"
-import type { CollectionSummaryType, TaskType } from "@/server/api/types"
+import type { TaskType } from "@/server/api/types"
 import { useTRPC } from "@/trpc/react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { CloudDownloadIcon, CloudUploadIcon } from "lucide-react"
@@ -120,12 +120,11 @@ const ImportExportSection = () => {
   const convertFileToDataUrl = (e: ProgressEvent<FileReader>) => {
     const dataUrlString = e.target?.result
     const dataUrl = dataUrlString as string
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const data = dataUrl.split(",")[1]!
     const buffer = Buffer.from(data, "base64")
     const string = buffer.toString()
     const json = JSON.parse(string) as {
-      collections: CollectionSummaryType[]
+      collections: { id: string; name: string; description: string }[]
       tasks: TaskType[]
     }
     const collections = json.collections
