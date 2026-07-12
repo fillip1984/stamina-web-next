@@ -1,3 +1,12 @@
+import {
+  collections,
+  DayOfWeekEnum,
+  DaytimeEnum,
+  OnCompleteEnum,
+  TaskEnum,
+  tasks,
+} from "@/server/db/schema"
+import z from "zod"
 import { createTRPCRouter, protectedProcedure } from "../trpc"
 
 export const adminRouter = createTRPCRouter({
@@ -25,69 +34,70 @@ export const adminRouter = createTRPCRouter({
       tasks,
     }
   }),
-  // importData: protectedProcedure
-  //   .input(
-  //     z.object({
-  //       areas: z.array(
-  //         z.object({
-  //           id: z.string(),
-  //           name: z.string(),
-  //           description: z.string(),
-  //         }),
-  //       ),
-  //       measurables: z.array(
-  //         z.object({
-  //           id: z.string(),
-  //           setDate: z.date(),
-  //           name: z.string(),
-  //           description: z.string(),
-  //           areaId: z.string().nullable(),
-  //           suggestedDay: z.enum(DayOfWeekEnum).nullable(),
-  //           suggestedDayTime: z.enum(DaytimeEnum).nullable(),
-  //           type: z.enum(MeasurableTypeEnum),
-  //           dueDate: z.date().nullable(),
-  //           interval: z.number().min(1).optional(),
-  //         }),
-  //       ),
-  //     }),
-  //   )
-  //   .mutation(async ({ ctx, input }) => {
-  //     for (const area of input.areas) {
-  //       const existingArea = await ctx.db.area.findUnique({
-  //         where: { id: area.id, userId: ctx.session.user.id },
-  //       });
-  //       if (!existingArea) {
-  //         await ctx.db.area.create({
-  //           data: {
-  //             id: area.id,
-  //             name: area.name,
-  //             description: area.description,
-  //             userId: ctx.session.user.id,
-  //           },
-  //         });
-  //       }
-  //     }
+  importData: protectedProcedure
+    .input(
+      z.object({
+        collections: z.array(
+          z.object({
+            id: z.string(),
+            name: z.string(),
+            description: z.string(),
+          })
+        ),
+        tasks: z.array(
+          z.object({
+            id: z.string(),
+            name: z.string().min(1),
+            description: z.string().optional(),
+            type: z.enum(TaskEnum),
+            setDate: z.date(),
+            suggestedDay: z.enum(DayOfWeekEnum).nullable(),
+            suggestedDayTime: z.enum(DaytimeEnum).nullable(),
+            dueDate: z.date().nullable(),
+            interval: z.number().min(1).optional(),
+            onComplete: z.enum(OnCompleteEnum).nullable(),
+            collectionId: z.string(),
+          })
+        ),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      for (const collection of input.collections) {
+        const existingCollection = await ctx.db.query.collections.findFirst({
+          where: { id: collection.id, userId: ctx.session.user.id },
+        })
+        if (!existingCollection) {
+          await ctx.db.insert(collections).values({
+            name: collection.name,
+            description: collection.description,
+            userId: ctx.session.user.id,
+          })
+        }
+      }
 
-  //     for (const measurable of input.measurables) {
-  //       const existingMeasurable = await ctx.db.measurable.findUnique({
-  //         where: { id: measurable.id, userId: ctx.session.user.id },
-  //       });
-  //       if (existingMeasurable) continue;
+      for (const task of input.tasks) {
+        const existingtask = await ctx.db.query.tasks.findFirst({
+          where: {
+            id: task.id,
+            userId: ctx.session.user.id,
+          },
+          //{ id: task.id, userId: ctx.session.user.id },
+        })
+        if (existingtask) continue
 
-  //       await ctx.db.measurable.create({
-  //         data: {
-  //           setDate: measurable.setDate,
-  //           name: measurable.name,
-  //           description: measurable.description,
-  //           areaId: measurable.areaId,
-  //           suggestedDay: measurable.suggestedDay,
-  //           suggestedDayTime: measurable.suggestedDayTime,
-  //           type: measurable.type,
-  //           dueDate: measurable.dueDate,
-  //           interval: measurable.interval,
-  //           userId: ctx.session.user.id,
-  //         },
-  //       });
-  //     }
-  //   }),
+        await ctx.db.insert(tasks).values({
+          name: task.name,
+          description: task.description,
+          type: task.type,
+          setDate: task.setDate,
+          suggestedDay: task.suggestedDay,
+          suggestedDayTime: task.suggestedDayTime,
+          dueDate: task.dueDate,
+          interval: task.interval,
+          onComplete: task.onComplete,
+          collectionId: task.collectionId,
+          userId: ctx.session.user.id,
+        })
+      }
+    }),
 })

@@ -51,6 +51,14 @@ const data = {
       title: "Collections",
       url: "/collections",
     },
+    {
+      title: "Tags",
+      url: "/tags",
+    },
+    {
+      title: "Results",
+      url: "/results",
+    },
   ],
 }
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {

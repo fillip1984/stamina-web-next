@@ -35,6 +35,8 @@ import {
 import Image from "next/image"
 import { useState } from "react"
 
+import scaleIcon from "@/../public/icons/scale-weight.svg"
+
 export default function OnCompleteModal({
   task,
   dismiss,
@@ -111,10 +113,7 @@ const WeighIn = ({
                     <CalendarDaysIcon />
                   </InputGroupAddon>
                   <Button variant="ghost">
-                    {
-                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                      date ? date.toLocaleDateString() : "Select date"
-                    }
+                    {date ? date.toLocaleDateString() : "Select date"}
                     <ChevronDownIcon />
                   </Button>
                 </InputGroup>
@@ -135,7 +134,7 @@ const WeighIn = ({
           <InputGroup className="w-40">
             <InputGroupAddon>
               <Image
-                src="/weight-scale.png"
+                src={scaleIcon}
                 alt="Weight Scale"
                 width={20}
                 height={20}
@@ -230,10 +229,7 @@ const BloodPressureReading = ({
                     <CalendarDaysIcon />
                   </InputGroupAddon>
                   <Button variant="ghost">
-                    {
-                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                      date ? date.toLocaleDateString() : "Select date"
-                    }
+                    {date ? date.toLocaleDateString() : "Select date"}
                     <ChevronDownIcon />
                   </Button>
                 </InputGroup>
