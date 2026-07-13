@@ -6,7 +6,7 @@ Build a personal, invitation-only task tracking app focused on recurring behavio
 The product centers around collections of tasks, where each task can behave differently over time:
 
 - Todo: one-off completion behavior.
-- Countdown: date-based cadence with interval.
+- Recurring: date-based cadence with interval.
 - Seeking: exploratory cadence that becomes structured after repeated completion.
 - Tally: open-ended streak/time-since behavior.
 
@@ -54,7 +54,7 @@ Navigation model:
 
 - User opens Add Task from a collection page.
 - User enters task metadata and chooses task type.
-- If Countdown, user can set suggested day/time, due date, and interval.
+- If Recurring, user can set suggested day/time, due date, and interval.
 - Task is persisted and visible in collection list.
 
 ### 4.4 Complete task
@@ -142,7 +142,7 @@ Important task fields:
 Behavioral rules:
 
 - Completion recalculates timing data based on task type.
-- Seeking tasks can transition into countdown-like behavior after completion.
+- Seeking tasks can transition into recurring-like behavior after completion.
 - Optional side effects create health measurements tied to completion events.
 
 ## 8. State and Data Flow

@@ -31,7 +31,7 @@ Recommended workflow for a change:
 
 - Authenticated single-user experience.
 - Collections CRUD.
-- Task CRUD with typed behavior (Todo, Countdown, Seeking, Tally).
+- Task CRUD with typed behavior (Todo, Recurring, Seeking, Tally).
 - Task completion with optional measurement side effects.
 - Data export from Settings.
 

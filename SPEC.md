@@ -67,7 +67,7 @@ Acceptance criteria:
 - User shall create task within a collection.
 - User shall edit existing task details.
 - Task form shall validate required fields.
-- Task type shall support Todo, Countdown, Seeking, and Tally.
+- Task type shall support Todo, Recurring, Seeking, and Tally.
 
 Acceptance criteria:
 
@@ -76,14 +76,14 @@ Acceptance criteria:
 
 ### FR-5 Task Scheduling Semantics
 
-- Countdown tasks require due date semantics.
+- Recurring tasks require due date semantics.
 - Suggested day and suggested day time are optional metadata.
 - Interval is optional at create time and may be inferred through completion logic.
 
 Acceptance criteria:
 
-- Countdown task cannot be submitted without due date.
-- Suggested day can auto-drive due date defaults in UI for countdown mode.
+- Recurring task cannot be submitted without due date.
+- Suggested day can auto-drive due date defaults in UI for recurring mode.
 
 ### FR-6 Task Completion
 

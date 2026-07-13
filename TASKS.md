@@ -50,7 +50,7 @@ Goal: Improve correctness and maintainability of router logic.
 
 ### 2.2 Completion flow invariants
 
-- [ ] Add tests covering task.complete transitions for Todo, Countdown, Seeking, and Tally.
+- [ ] Add tests covering task.complete transitions for Todo, Recurring, Seeking, and Tally.
 - [ ] Verify interval and due date calculations across boundary cases.
 - [ ] Ensure result and measurement writes remain transactional.
 

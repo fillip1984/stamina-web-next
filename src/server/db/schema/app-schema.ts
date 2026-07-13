@@ -35,7 +35,6 @@ export const tasks = baseSchema.table("task", (t) => ({
     .notNull(),
   priority: taskPriorityPgEnum("priority"),
   dueDate: t.timestamp(),
-  // dueDate: t.date("due_date", { mode: "string" }),
   position: t.integer("position"),
   type: taskTypePgEnum("type").notNull(),
   setDate: t.timestamp("set_date").notNull(),

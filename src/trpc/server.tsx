@@ -4,8 +4,6 @@ import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query"
 import { headers } from "next/headers"
 import { cache } from "react"
 
-// import type { AppRouter } from "@todo/api"
-// import { appRouter, createTRPCContext } from "@todo/api"
 import { createTRPCContext } from "@/server/api"
 import { appRouter, type AppRouter } from "@/server/api/root"
 

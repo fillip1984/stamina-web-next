@@ -2,8 +2,8 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import {
-  HourglassIcon,
   ListChecksIcon,
+  RepeatIcon,
   Tally5Icon,
   TelescopeIcon,
 } from "lucide-react"
@@ -145,7 +145,7 @@ export default function TaskDetailsDialog({
   const [validToCreate, setValidToCreate] = useState(false)
   const validateForm = () => {
     if (name.trim().length === 0) return false
-    if (type === "Countdown" && !dueDate) return false
+    if (type === "Recurring" && !dueDate) return false
 
     return true
   }
@@ -184,7 +184,7 @@ export default function TaskDetailsDialog({
 
   // UX: set dueDate to next instance of suggestedDay when it is selected
   useEffect(() => {
-    if (type !== "Countdown") return
+    if (type !== "Recurring") return
     if (!suggestedDay) return
     // only update if changed
     if (task.suggestedDay === suggestedDay) return
@@ -222,8 +222,8 @@ export default function TaskDetailsDialog({
       description: "A task that can be completed a single time.",
     },
     {
-      label: "Countdown",
-      icon: <HourglassIcon />,
+      label: "Recurring",
+      icon: <RepeatIcon />,
       description: "A task that counts down to a due date.",
     },
     {
@@ -338,7 +338,7 @@ export default function TaskDetailsDialog({
             </FieldSet>
           </FieldGroup>
           <AnimatePresence initial={false}>
-            {type === "Countdown" && (
+            {type === "Recurring" && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}

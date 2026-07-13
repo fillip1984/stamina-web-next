@@ -135,7 +135,7 @@ export const taskRouter = createTRPCRouter({
       const effectiveInterval = task.interval ?? interval
       const newSetDate = startOfDay(task.dueDate ?? new Date())
       const newDueDate =
-        task.type === TaskTypeEnumValues.COUNTDOWN
+        task.type === TaskTypeEnumValues.RECURRING
           ? startOfDay(addDays(newSetDate, effectiveInterval))
           : task.type === TaskTypeEnumValues.SEEKING
             ? startOfDay(addDays(newSetDate, elapsedDays))
@@ -144,10 +144,10 @@ export const taskRouter = createTRPCRouter({
       // task.dueDate = newDueDate ?? null;
 
       // if we were seeking for interval and have set a dueDate, change to count down
-      // if type was Countdown or Tally, leave alone
+      // if type was Recurring or Tally, leave alone
       const newType =
         task.type === TaskTypeEnumValues.SEEKING
-          ? TaskTypeEnumValues.COUNTDOWN
+          ? TaskTypeEnumValues.RECURRING
           : task.type
 
       const tx = ctx.db.transaction(async (db) => {

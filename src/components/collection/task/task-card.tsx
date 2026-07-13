@@ -179,7 +179,7 @@ export default function TaskCard({ task }: { task: TaskType }) {
                 </span>
                 <span className="flex items-center gap-1">
                   <GiDuration />
-                  {task.type === "Countdown"
+                  {task.type === "Recurring"
                     ? `${interval} days`
                     : "No interval set"}
                 </span>

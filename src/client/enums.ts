@@ -16,7 +16,7 @@ export type TaskStatusEnumType =
 
 export const TaskTypeEnumValues = {
   TODO: "Todo",
-  COUNTDOWN: "Countdown",
+  RECURRING: "Recurring",
   SEEKING: "Seeking",
   TALLY: "Tally",
 } as const
