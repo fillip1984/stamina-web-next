@@ -1,4 +1,6 @@
-# Todo App
+# Stamina web next App
+
+**This is a single project that will be eventually added into a monorepo but building things up bit by bit**
 
 Personal, invitation-only task tracking application focused on recurring behavior change.
 
@@ -48,6 +50,14 @@ Install dependencies:
 
 ```bash
 pnpm install
+```
+
+Copy the .env.example into a .env file and enter your database details.
+
+Launch drizzle studio and create the schema, you can find the name of the schema under .env. The default is DATABASE_SCHEMA="todo" so todo is the schema you need to create. To launch drizzle studio
+
+```bash
+pnpm db:studio
 ```
 
 Run development server:
