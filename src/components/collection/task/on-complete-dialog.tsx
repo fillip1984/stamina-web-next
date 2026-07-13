@@ -36,6 +36,7 @@ import Image from "next/image"
 import { useState } from "react"
 
 import scaleIcon from "@/../public/icons/scale-weight.svg"
+import StyledDatePicker from "@/components/styled-components/styled-date-picker"
 
 export default function OnCompleteModal({
   task,
@@ -105,7 +106,12 @@ const WeighIn = ({
           <DialogTitle>Weigh in</DialogTitle>
         </DialogHeader>
         <div className="grid gap-3">
-          <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+          <StyledDatePicker
+            id="weighInDate"
+            value={date}
+            handleOnChange={(date) => setDate(date ?? new Date())}
+          />
+          {/* <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
             <PopoverTrigger
               render={
                 <InputGroup className="w-40">
@@ -129,7 +135,7 @@ const WeighIn = ({
                 }}
               />
             </PopoverContent>
-          </Popover>
+          </Popover> */}
 
           <InputGroup className="w-40">
             <InputGroupAddon>

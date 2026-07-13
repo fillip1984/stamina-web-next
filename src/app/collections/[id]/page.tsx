@@ -1,5 +1,6 @@
 "use client"
 
+import DeleteCollectionConfirmation from "@/components/collection/delete-collection-confirmation"
 import CreateTaskCard from "@/components/collection/task/create-task-card"
 import TaskCard from "@/components/collection/task/task-card"
 import LoadingAndRetry from "@/components/shared/loading-and-retry"
@@ -34,7 +35,7 @@ import {
 } from "lucide-react"
 import { AnimatePresence, motion } from "motion/react"
 import Link from "next/link"
-import { notFound, useRouter } from "next/navigation"
+import { notFound } from "next/navigation"
 import { use, useEffect, useState } from "react"
 
 export default function CollectionDetails({
@@ -52,6 +53,8 @@ export default function CollectionDetails({
     isError,
     refetch,
   } = useQuery(trpc.collection.readById.queryOptions({ id }))
+
+  const [isDeleteCollectionOpen, setIsDeleteCollectionOpen] = useState(false)
 
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
@@ -79,19 +82,19 @@ export default function CollectionDetails({
     }
   }
 
-  const router = useRouter()
-  const deleteCollection = useMutation(
-    trpc.collection.delete.mutationOptions({
-      onSuccess: async () => {
-        void queryClient.invalidateQueries(trpc.collection.pathFilter())
-        router.replace("/collections")
-      },
-    })
-  )
-  const handleDeleteCollection = () => {
-    if (!collection) return
-    deleteCollection.mutate({ id: collection.id })
-  }
+  // const router = useRouter()
+  // const deleteCollection = useMutation(
+  //   trpc.collection.delete.mutationOptions({
+  //     onSuccess: async () => {
+  //       void queryClient.invalidateQueries(trpc.collection.pathFilter())
+  //       router.replace("/collections")
+  //     },
+  //   })
+  // )
+  // const handleDeleteCollection = () => {
+  //   if (!collection) return
+  //   deleteCollection.mutate({ id: collection.id })
+  // }
 
   const collectionTypeOptions = [
     { label: "General", icon: <ListChecksIcon /> },
@@ -171,7 +174,7 @@ export default function CollectionDetails({
             <DropdownMenuGroup>
               <DropdownMenuItem
                 variant="destructive"
-                onClick={handleDeleteCollection}
+                onClick={() => setIsDeleteCollectionOpen(true)}
               >
                 <TrashIcon />
                 Delete
@@ -235,10 +238,11 @@ export default function CollectionDetails({
           </AnimatePresence>
         </div>
       </div>
-
-      {/* <div className="rounded-xl p-4">
-        <TaskDetailsDialog collectionId={collection.id} taskIdToEdit={null} />
-      </div> */}
+      <DeleteCollectionConfirmation
+        collection={collection}
+        open={isDeleteCollectionOpen}
+        close={() => setIsDeleteCollectionOpen(false)}
+      />
     </Container>
   )
 }
