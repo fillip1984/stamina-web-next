@@ -1,15 +1,17 @@
 import { z } from "zod"
 
+import {
+  DayOfWeekEnumValues,
+  DaytimeEnumValues,
+  OnCompleteEnumValues,
+  TaskTypeEnumValues,
+} from "@/client/enums"
 import { determineCategory } from "@/lib/blood-pressure-utils"
 import { calculateTaskProgress } from "@/lib/task-utils"
 import { db } from "@/server/db"
 import {
   bloodPressureReadings,
-  DayOfWeekEnum,
-  DaytimeEnum,
-  OnCompleteEnum,
   results,
-  TaskEnum,
   tasks,
   weighIns,
 } from "@/server/db/schema"
@@ -23,13 +25,13 @@ export const taskRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1),
         description: z.string().optional(),
-        type: z.enum(TaskEnum),
+        type: z.enum(TaskTypeEnumValues),
         setDate: z.date(),
-        suggestedDay: z.enum(DayOfWeekEnum).nullable(),
-        suggestedDayTime: z.enum(DaytimeEnum).nullable(),
+        suggestedDay: z.enum(DayOfWeekEnumValues).nullable(),
+        suggestedDayTime: z.enum(DaytimeEnumValues).nullable(),
         dueDate: z.date().nullable(),
         interval: z.number().min(1).optional(),
-        onComplete: z.enum(OnCompleteEnum).nullable(),
+        onComplete: z.enum(OnCompleteEnumValues).nullable(),
         collectionId: z.string(),
       })
     )
@@ -62,12 +64,12 @@ export const taskRouter = createTRPCRouter({
         id: z.string(),
         name: z.string().min(1),
         description: z.string().nullish(),
-        type: z.enum(TaskEnum).optional(),
-        suggestedDay: z.enum(DayOfWeekEnum).nullable(),
-        suggestedDayTime: z.enum(DaytimeEnum).nullable(),
+        type: z.enum(TaskTypeEnumValues).optional(),
+        suggestedDay: z.enum(DayOfWeekEnumValues).nullable(),
+        suggestedDayTime: z.enum(DaytimeEnumValues).nullable(),
         dueDate: z.date().nullable(),
         interval: z.number().min(1).optional(),
-        onComplete: z.enum(OnCompleteEnum).nullable(),
+        onComplete: z.enum(OnCompleteEnumValues).nullable(),
         complete: z.boolean(),
         collectionId: z.string(),
       })
@@ -109,13 +111,13 @@ export const taskRouter = createTRPCRouter({
         throw new Error("Task not found")
       }
       if (
-        task.onComplete === OnCompleteEnum.Weigh_in && // Weigh_in
+        task.onComplete === OnCompleteEnumValues.WEIGH_IN && // Weigh_in
         !weighIn
       ) {
         throw new Error("Weigh in data is required to complete this measurable")
       }
       if (
-        task.onComplete === OnCompleteEnum.Blood_pressure_reading && // Blood_pressure_reading
+        task.onComplete === OnCompleteEnumValues.BLOOD_PRESSURE_READING && // Blood_pressure_reading
         !bloodPressureReading
       ) {
         throw new Error(
@@ -133,9 +135,9 @@ export const taskRouter = createTRPCRouter({
       const effectiveInterval = task.interval ?? interval
       const newSetDate = startOfDay(task.dueDate ?? new Date())
       const newDueDate =
-        task.type === TaskEnum.Countdown
+        task.type === TaskTypeEnumValues.COUNTDOWN
           ? startOfDay(addDays(newSetDate, effectiveInterval))
-          : task.type === TaskEnum.Seeking
+          : task.type === TaskTypeEnumValues.SEEKING
             ? startOfDay(addDays(newSetDate, elapsedDays))
             : undefined
       // task.setDate = newSetDate;
@@ -144,7 +146,9 @@ export const taskRouter = createTRPCRouter({
       // if we were seeking for interval and have set a dueDate, change to count down
       // if type was Countdown or Tally, leave alone
       const newType =
-        task.type === TaskEnum.Seeking ? TaskEnum.Countdown : task.type
+        task.type === TaskTypeEnumValues.SEEKING
+          ? TaskTypeEnumValues.COUNTDOWN
+          : task.type
 
       const tx = ctx.db.transaction(async (db) => {
         const updatedMeasurable = await db

@@ -24,7 +24,7 @@ export default function CreateTaskCard({
     dueDate: null,
     onComplete: null,
     priority: null,
-    status: "todo",
+    status: "Todo",
     suggestedDay: null,
     suggestedDayTime: null,
     type: "Todo" as TaskType["type"],

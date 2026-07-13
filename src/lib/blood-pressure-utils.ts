@@ -1,22 +1,22 @@
-import { BloodPressureCategoryEnum } from "@/server/db/schema"
+import { BloodPressureCategoryEnumValues } from "@/client/enums"
 
 export const determineCategory = (bpr: {
   systolic: number
   diastolic: number
 }) => {
   if (bpr.systolic > 180 || bpr.diastolic > 120) {
-    return BloodPressureCategoryEnum.Hypertension_crisis // "Hypertension_crisis"
+    return BloodPressureCategoryEnumValues.HYPERTENSION_CRISIS // "Hypertensive Crisis"
   } else if (bpr.systolic >= 140 || bpr.diastolic >= 90) {
-    return BloodPressureCategoryEnum.Hypertension_2 // "Hypertension_2"
+    return BloodPressureCategoryEnumValues.HYPERTENSION_2 // "Hypertension Stage 2"
   } else if (bpr.systolic >= 130) {
-    return BloodPressureCategoryEnum.Hypertension_1 // "Hypertension_1"
+    return BloodPressureCategoryEnumValues.HYPERTENSION_1 // "Hypertension Stage 1"
   } else if (bpr.diastolic >= 80) {
-    return BloodPressureCategoryEnum.Hypertension_1 // "Hypertension_1"
+    return BloodPressureCategoryEnumValues.HYPERTENSION_1 // "Hypertension Stage 1"
   } else if (bpr.systolic >= 120) {
-    return BloodPressureCategoryEnum.Elevated // "Elevated"
+    return BloodPressureCategoryEnumValues.ELEVATED // "Elevated"
   } else if (bpr.systolic >= 90) {
-    return BloodPressureCategoryEnum.Normal // "Normal"
+    return BloodPressureCategoryEnumValues.NORMAL // "Normal"
   } else {
-    return BloodPressureCategoryEnum.Low // "Low"
+    return BloodPressureCategoryEnumValues.LOW // "Low"
   }
 }

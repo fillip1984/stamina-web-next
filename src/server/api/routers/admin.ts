@@ -1,11 +1,10 @@
 import {
-  collections,
-  DayOfWeekEnum,
-  DaytimeEnum,
-  OnCompleteEnum,
-  TaskEnum,
-  tasks,
-} from "@/server/db/schema"
+  DayOfWeekEnumValues,
+  DaytimeEnumValues,
+  OnCompleteEnumValues,
+  TaskTypeEnumValues,
+} from "@/client/enums"
+import { collections, tasks } from "@/server/db/schema"
 import z from "zod"
 import { createTRPCRouter, protectedProcedure } from "../trpc"
 
@@ -49,13 +48,13 @@ export const adminRouter = createTRPCRouter({
             id: z.string(),
             name: z.string().min(1),
             description: z.string().nullable(),
-            type: z.enum(TaskEnum),
+            type: z.enum(TaskTypeEnumValues),
             setDate: z.date(),
-            suggestedDay: z.enum(DayOfWeekEnum).nullable(),
-            suggestedDayTime: z.enum(DaytimeEnum).nullable(),
+            suggestedDay: z.enum(DayOfWeekEnumValues).nullable(),
+            suggestedDayTime: z.enum(DaytimeEnumValues).nullable(),
             dueDate: z.date().nullable(),
             interval: z.number().min(1).optional(),
-            onComplete: z.enum(OnCompleteEnum).nullable(),
+            onComplete: z.enum(OnCompleteEnumValues).nullable(),
             collectionId: z.string(),
           })
         ),

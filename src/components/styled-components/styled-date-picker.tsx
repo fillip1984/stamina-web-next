@@ -1,4 +1,4 @@
-import { format, parse } from "date-fns"
+import { format } from "date-fns"
 import { CalendarIcon, ChevronDownIcon, XIcon } from "lucide-react"
 import { useState } from "react"
 import { Calendar } from "../ui/calendar"
@@ -14,13 +14,16 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
  * Shadcn UI DatePicker but with a clear button is all this accomplishes. Much like the combobox with clear option seen here: https://ui.shadcn.com/docs/components/base/combobox#clear-button
  */
 export default function StyledDatePicker({
+  id,
   value,
   handleOnChange,
   leadingIcon,
   placeholder,
+  ...props
 }: {
-  value: string
-  handleOnChange: (value: string) => void
+  id: string
+  value: Date | null
+  handleOnChange: (value: Date | null) => void
   leadingIcon?: React.ReactNode
   placeholder?: string
 }) {
@@ -38,8 +41,8 @@ export default function StyledDatePicker({
           render={
             <InputGroupInput
               className="w-full min-w-0 text-left"
-              id="date-required"
-              value={value}
+              id={id}
+              value={value !== null ? format(value, "yyyy-MM-dd") : ""}
               // onChange={(e) => onChange(e.target.value)}
               placeholder={placeholder || "Select date"}
               onKeyDown={(e) => {
@@ -48,23 +51,19 @@ export default function StyledDatePicker({
                   setIsOpen(true)
                 }
               }}
+              {...props}
             />
           }
         />
         <PopoverContent className="w-auto overflow-hidden p-0" align="center">
           <Calendar
             mode="single"
-            selected={
-              value !== "" ? parse(value, "yyyy-MM-dd", new Date()) : undefined
-            }
+            selected={value !== null ? value : undefined}
             onSelect={(date) => {
-              console.log({ d: date ? format(date, "yyyy-MM-dd") : "" })
-              handleOnChange(date ? format(date, "yyyy-MM-dd") : "")
+              handleOnChange(date ?? null)
               setIsOpen(false)
             }}
-            defaultMonth={
-              value !== "" ? parse(value, "yyyy-MM-dd", new Date()) : undefined
-            }
+            defaultMonth={value !== null ? value : undefined}
           />
         </PopoverContent>
       </Popover>
@@ -77,7 +76,7 @@ export default function StyledDatePicker({
             onClick={(event) => {
               event.preventDefault()
               event.stopPropagation()
-              handleOnChange("")
+              handleOnChange(null)
             }}
             className="group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent"
           >

@@ -44,9 +44,9 @@ export default function OnCompleteModal({
   task: TaskType
   dismiss: () => void
 }) {
-  if ("Weigh_in" === task.onComplete) {
+  if ("Weigh In" === task.onComplete) {
     return <WeighIn task={task} dismiss={dismiss} />
-  } else if ("Blood_pressure_reading" === task.onComplete) {
+  } else if ("Blood Pressure Reading" === task.onComplete) {
     return <BloodPressureReading task={task} dismiss={dismiss} />
   } else {
     return null

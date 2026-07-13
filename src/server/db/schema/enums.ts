@@ -1,71 +1,48 @@
+import {
+  BloodPressureCategoryEnumValues,
+  CollectionEnumValues,
+  DayOfWeekEnumValues,
+  DaytimeEnumValues,
+  OnCompleteEnumValues,
+  TaskPriorityEnumValues,
+  TaskStatusEnumValues,
+  TaskTypeEnumValues,
+} from "@/client/enums"
 import { baseSchema } from "./base"
 
-export const CollectionTypeEnum = baseSchema.enum("collection_type", [
-  "GENERAL",
-  "TMDB",
-])
-
-export const StatusEnum = baseSchema.enum("todo_status", [
-  "todo",
-  "in_progress",
-  "blocked",
-  "done",
-])
-
-export const PriorityEnum = baseSchema.enum("todo_priority", [
-  "important",
-  "urgent",
-  "frantic",
-])
-
-// Enums, https://github.com/drizzle-team/drizzle-orm/discussions/1914
-export enum TaskEnum {
-  Todo = "Todo",
-  Countdown = "Countdown",
-  Seeking = "Seeking",
-  Tally = "Tally",
-}
-export const taskPgEnum = baseSchema.enum("taskEnum", TaskEnum)
-
-export enum DaytimeEnum {
-  Morning = "Morning",
-  Afternoon = "Afternoon",
-  Evening = "Evening",
-  Night = "Night",
-}
-export const daytimePgEnum = baseSchema.enum("daytimeEnum", DaytimeEnum)
-
-export enum DayOfWeekEnum {
-  Sunday = "Sunday",
-  Monday = "Monday",
-  Tuesday = "Tuesday",
-  Wednesday = "Wednesday",
-  Thursday = "Thursday",
-  Friday = "Friday",
-  Saturday = "Saturday",
-}
-export const dayOfWeekPgEnum = baseSchema.enum("dayOfWeekEnum", DayOfWeekEnum)
-
-export enum OnCompleteEnum {
-  Note = "Note",
-  Weigh_in = "Weigh_in",
-  Blood_pressure_reading = "Blood_pressure_reading",
-  Runners_log = "Runners_log",
-}
-export const onCompletePgEnum = baseSchema.enum(
-  "onCompleteEnum",
-  OnCompleteEnum
+export const collectionPgEnum = baseSchema.enum(
+  "collection_enum",
+  CollectionEnumValues
 )
 
-export enum BloodPressureCategoryEnum {
-  Low = "Low",
-  Normal = "Normal",
-  Elevated = "Elevated",
-  Hypertension_1 = "Hypertension_1",
-  Hypertension_2 = "Hypertension_2",
-  Hypertension_crisis = "Hypertension_crisis",
-}
+export const taskStatusPgEnum = baseSchema.enum(
+  "task_status_enum",
+  TaskStatusEnumValues
+)
+
+export const taskPriorityPgEnum = baseSchema.enum(
+  "task_priority_enum",
+  TaskPriorityEnumValues
+)
+
+export const taskTypePgEnum = baseSchema.enum(
+  "task_type_enum",
+  TaskTypeEnumValues
+)
+
+export const daytimePgEnum = baseSchema.enum("daytime_enum", DaytimeEnumValues)
+
+export const dayOfWeekPgEnum = baseSchema.enum(
+  "day_of_week_enum",
+  DayOfWeekEnumValues
+)
+
+export const onCompletePgEnum = baseSchema.enum(
+  "on_complete_enum",
+  OnCompleteEnumValues
+)
+
 export const bloodPressureCategoryPgEnum = baseSchema.enum(
-  "bloodPressureCategoryEnum",
-  BloodPressureCategoryEnum
+  "blood_pressure_category_enum",
+  BloodPressureCategoryEnumValues
 )

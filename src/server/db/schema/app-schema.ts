@@ -1,21 +1,24 @@
+import { CollectionEnumValues, TaskStatusEnumValues } from "@/client/enums"
 import { user } from "./auth"
 import { baseFields, baseSchema } from "./base"
 import {
   bloodPressureCategoryPgEnum,
-  CollectionTypeEnum,
+  collectionPgEnum,
   dayOfWeekPgEnum,
   daytimePgEnum,
   onCompletePgEnum,
-  PriorityEnum,
-  StatusEnum,
-  taskPgEnum,
+  taskPriorityPgEnum,
+  taskStatusPgEnum,
+  taskTypePgEnum,
 } from "./enums"
 
 export const collections = baseSchema.table("collection", (t) => ({
   ...baseFields,
   name: t.varchar("name", { length: 256 }).notNull(),
   description: t.text("description"),
-  type: CollectionTypeEnum("type").default("GENERAL").notNull(),
+  type: collectionPgEnum("type")
+    .default(CollectionEnumValues.GENERAL)
+    .notNull(),
   userId: t
     .text("user_id")
     .notNull()
@@ -27,12 +30,14 @@ export const tasks = baseSchema.table("task", (t) => ({
   name: t.varchar("name", { length: 256 }).notNull(),
   description: t.text("description"),
   complete: t.boolean("complete").default(false).notNull(),
-  status: StatusEnum("status").notNull().default("todo"),
-  priority: PriorityEnum("priority"),
+  status: taskStatusPgEnum("status")
+    .default(TaskStatusEnumValues.TODO)
+    .notNull(),
+  priority: taskPriorityPgEnum("priority"),
   dueDate: t.timestamp(),
   // dueDate: t.date("due_date", { mode: "string" }),
   position: t.integer("position"),
-  type: taskPgEnum("type").notNull(),
+  type: taskTypePgEnum("type").notNull(),
   setDate: t.timestamp("set_date").notNull(),
   suggestedDayTime: daytimePgEnum("suggested_day_time"),
   suggestedDay: dayOfWeekPgEnum("suggested_day"),
